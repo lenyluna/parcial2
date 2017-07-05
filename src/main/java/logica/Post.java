@@ -13,22 +13,23 @@ public class Post implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+    private String titulo;
     private String descripcion;
-    private Image img;
+    private String urlimagen;
+    private int views;
+    private double imgsize;
     @ManyToOne(targetEntity = Usuario.class)
     private Usuario user;
     @OneToMany(targetEntity = Etiqueta.class,fetch = FetchType.EAGER)
     private Set<Etiqueta> listaEtiqueta;
     @OneToMany(targetEntity = Comentario.class,mappedBy = "post",fetch = FetchType.EAGER)
     private Set<Comentario> listaComentario;
-    private int cantVeces;
-    private int views;
-    private int cantAnchoDeBanda;
-    private String link;
 
-    public Post(String descripcion, Image img, Usuario user, Set<Etiqueta> listaEtiqueta) {
+    public Post(String titulo, String descripcion, String urlimagen, double imgsize, Usuario user, Set<Etiqueta> listaEtiqueta) {
+        this.titulo = titulo;
         this.descripcion = descripcion;
-        this.img = img;
+        this.urlimagen = urlimagen;
+        this.imgsize = imgsize;
         this.user = user;
         this.listaEtiqueta = listaEtiqueta;
     }
@@ -41,6 +42,14 @@ public class Post implements Serializable {
         this.id = id;
     }
 
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+
     public String getDescripcion() {
         return descripcion;
     }
@@ -49,12 +58,28 @@ public class Post implements Serializable {
         this.descripcion = descripcion;
     }
 
-    public Image getImg() {
-        return img;
+    public String getUrlimagen() {
+        return urlimagen;
     }
 
-    public void setImg(Image img) {
-        this.img = img;
+    public void setUrlimagen(String urlimagen) {
+        this.urlimagen = urlimagen;
+    }
+
+    public int getViews() {
+        return views;
+    }
+
+    public void setViews(int views) {
+        this.views = views;
+    }
+
+    public double getImgsize() {
+        return imgsize;
+    }
+
+    public void setImgsize(double imgsize) {
+        this.imgsize = imgsize;
     }
 
     public Usuario getUser() {
@@ -79,37 +104,5 @@ public class Post implements Serializable {
 
     public void setListaComentario(Set<Comentario> listaComentario) {
         this.listaComentario = listaComentario;
-    }
-
-    public int getCantVeces() {
-        return cantVeces;
-    }
-
-    public void setCantVeces(int cantVeces) {
-        this.cantVeces = cantVeces;
-    }
-
-    public int getViews() {
-        return views;
-    }
-
-    public void setViews(int views) {
-        this.views = views;
-    }
-
-    public int getCantAnchoDeBanda() {
-        return cantAnchoDeBanda;
-    }
-
-    public void setCantAnchoDeBanda(int cantAnchoDeBanda) {
-        this.cantAnchoDeBanda = cantAnchoDeBanda;
-    }
-
-    public String getLink() {
-        return link;
-    }
-
-    public void setLink(String link) {
-        this.link = link;
     }
 }

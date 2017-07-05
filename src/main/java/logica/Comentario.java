@@ -11,17 +11,19 @@ public class Comentario implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    private String comentario;
+    private String contenido;
+    private String fecha;
     @ManyToOne(targetEntity = Usuario.class)
-    private Usuario user;
+    private Usuario autor;
     @ManyToOne (targetEntity = Post.class)
     private Post post;
-    private int meGusta;
-    private int noMeGusta;
+    private int upVote;
+    private int downVote;
 
-    public Comentario(String comentario, Usuario user, Post post) {
-        this.comentario = comentario;
-        this.user = user;
+    public Comentario(String contenido, String fecha, Usuario autor, Post post) {
+        this.contenido = contenido;
+        this.fecha = fecha;
+        this.autor = autor;
         this.post = post;
     }
 
@@ -33,20 +35,28 @@ public class Comentario implements Serializable {
         this.id = id;
     }
 
-    public String getComentario() {
-        return comentario;
+    public String getContenido() {
+        return contenido;
     }
 
-    public void setComentario(String comentario) {
-        this.comentario = comentario;
+    public void setContenido(String contenido) {
+        this.contenido = contenido;
     }
 
-    public Usuario getUser() {
-        return user;
+    public String getFecha() {
+        return fecha;
     }
 
-    public void setUser(Usuario user) {
-        this.user = user;
+    public void setFecha(String fecha) {
+        this.fecha = fecha;
+    }
+
+    public Usuario getAutor() {
+        return autor;
+    }
+
+    public void setAutor(Usuario autor) {
+        this.autor = autor;
     }
 
     public Post getPost() {
@@ -57,19 +67,19 @@ public class Comentario implements Serializable {
         this.post = post;
     }
 
-    public int getMeGusta() {
-        return meGusta;
+    public int getUpVote() {
+        return upVote;
     }
 
-    public void setMeGusta(int meGusta) {
-        this.meGusta = meGusta;
+    public void setUpVote(int upVote) {
+        this.upVote = upVote;
     }
 
-    public int getNoMeGusta() {
-        return noMeGusta;
+    public int getDownVote() {
+        return downVote;
     }
 
-    public void setNoMeGusta(int noMeGusta) {
-        this.noMeGusta = noMeGusta;
+    public void setDownVote(int downVote) {
+        this.downVote = downVote;
     }
 }
