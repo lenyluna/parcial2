@@ -1,17 +1,25 @@
 package logica;
 
+import javax.persistence.*;
 import java.awt.*;
+import java.io.Serializable;
 import java.util.Set;
 
 /**
  * Created by Leny96 on 4/7/2017.
  */
-public class Post {
+@Entity
+public class Post implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private String descripcion;
     private Image img;
+    @ManyToOne(targetEntity = Usuario.class)
     private Usuario user;
+    @OneToMany(targetEntity = Etiqueta.class,fetch = FetchType.EAGER)
     private Set<Etiqueta> listaEtiqueta;
+    @OneToMany(targetEntity = Comentario.class,mappedBy = "post",fetch = FetchType.EAGER)
     private Set<Comentario> listaComentario;
     private int cantVeces;
     private int views;

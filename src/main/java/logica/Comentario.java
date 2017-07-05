@@ -1,12 +1,20 @@
 package logica;
 
+import javax.persistence.*;
+import java.io.Serializable;
+
 /**
  * Created by Leny96 on 4/7/2017.
  */
-public class Comentario {
+@Entity
+public class Comentario implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private String comentario;
+    @ManyToOne(targetEntity = Usuario.class)
     private Usuario user;
+    @ManyToOne (targetEntity = Post.class)
     private Post post;
     private int meGusta;
     private int noMeGusta;
