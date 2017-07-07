@@ -91,9 +91,8 @@ public class Main {
             return writer;
         });
 
-        Spark.post("/CrearPost/guardando", "multipart/form-data", (request, response) -> {
+        Spark.post("/CrearPost/guardando", (request, response) -> {
             StringWriter writer = new StringWriter();
-
             try {
                 Usuario user = UsuarioServices.getInstancia().find(request.session().attribute(SESSION_NAME));
                 String titulo = request.queryParams("titulo") != null ? request.queryParams("titulo") : "unknown";
@@ -102,7 +101,11 @@ public class Main {
                 System.out.println("ETIQUETAS COJOYO:" + etiquetas);
                 String etiqueta[] = etiquetas.split(",");
                 Set<Etiqueta> listEtiqueta = new HashSet<>();
+<<<<<<< Updated upstream
             /*    if (etiqueta.length != 0) {
+=======
+                /*if (etiqueta.length != 0) {
+>>>>>>> Stashed changes
                     for (int i = 0; i < etiqueta.length; i++) {
                         Etiqueta et = EtiquetaServices.getInstancia().findEtiquetaByName(etiqueta[i]);
                         if (et == null) {
