@@ -88,8 +88,8 @@ public class Main {
 
             try {
                 Usuario user = UsuarioServices.getInstancia().find(request.session().attribute(SESSION_NAME));
-                String titulo = request.queryParams("titulo");
-                String descripcion = request.queryParams("descripcion");
+                String titulo = request.queryParams("titulo") != null ? request.queryParams("titulo") : "unknown";;
+                String descripcion = request.queryParams("descripcion") != null ? request.queryParams("descripcion") : "unknown";;
                 String etiquetas = request.queryParams("eti") != null ? request.queryParams("eti") : "unknown";
                 System.out.println("ETIQUETAS COJOYO:" + etiquetas);
                 String etiqueta[] = etiquetas.split(",");
