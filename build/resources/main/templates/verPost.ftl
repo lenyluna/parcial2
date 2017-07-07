@@ -39,7 +39,7 @@
             <ul class="nav navbar-nav">
             <li>
                 <p class="navbar-btn">
-                    <a href="#" class="btn btn-success"><span class="glyphicon glyphicon-open" ></span>   Nueva Imagen</a>
+                    <a href="/CrearPost/" class="btn btn-success"><span class="glyphicon glyphicon-open" ></span>   Nueva Imagen</a>
                 </p>
             <#if login=="false">
                 <li><a href="/signup/">Sign up</a></li>
