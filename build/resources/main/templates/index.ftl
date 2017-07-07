@@ -35,75 +35,13 @@
         </button>
         <a class="navbar-brand" href="/">PicAbu!</a>
     </div>
-
-
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav">
             <li>
                 <p class="navbar-btn">
-                    <a href="#" class="btn btn-success" ><span class="glyphicon glyphicon-open" ></span> Nueva Imagen</a>
+                    <a href="/CrearPost/" class="btn btn-success" ><span class="glyphicon glyphicon-open" ></span> Nueva Imgen</a>
                 </p>
-                <!--<div class="modal modal-success fade bs-nuevo-pago" role="dialog" aria-labelledby="NuevoPago">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                        aria-hidden="true">&times;</span></button>
-                                <h4 class="modal-title" id="myModalLabell">Nuevo post</h4>
-                            </div>
-                            <div class="modal-body">
-                                <form action="">
-
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">Titulo</label>
-                                        <input type="text" required class="form-control" id="exampleInputEmail1">
-                                    </div>
-
-                                    <div id="gallery"></div>
-
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">Descripcion</label>
-
-                                        <textarea class="form-control" required rows="3"></textarea>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label>Etiquetas</label>
-                                        <select required multiple="multiple" id="etiquetes" class="form-control" style="width: 100%;">
-                                            <option selected="selected">Naturaleza</option>
-                                            <option>Tecnologia</option>
-                                            <option>Politica</option>
-                                            <option>Gatos</option>
-                                            <option>Memes</option>
-                                            <option>Perros</option>
-                                        </select>
-                                    </div>
-
-
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">Foto</label>
-
-                                        <input required type="file" id="fileinput" multiple="multiple" accept="image/*" />
-
-                                    </div>
-
-
-
-                                    <br>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                                        <button type="submit" class="btn btn-primary  btn-lg">Publicar</button>
-                                    </div>
-
-                                </form>
-
-
-                            </div>
-
-                        </div>
-                    </div>
-                </div>-->
-                </li>
+            </li>
             <#if login=="false">
             <li><a href="/signup/">Sign up</a></li>
             </#if>

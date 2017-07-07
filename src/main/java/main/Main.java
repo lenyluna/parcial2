@@ -3,10 +3,7 @@ package main;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.Version;
-import logica.Comentario;
-import logica.Post;
-import logica.Typeline;
-import logica.Usuario;
+import logica.*;
 import services.*;
 import spark.Request;
 import spark.Spark;
@@ -14,10 +11,8 @@ import spark.Spark;
 import java.awt.*;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import static spark.Spark.halt;
@@ -74,6 +69,19 @@ public class Main {
             map.put("tipoUser",user.getPrivilegio().name());
             formTemplate.process(map, writer);
             return writer;
+        });
+
+        Spark.post("/CrearPost/guardando",(request, response) -> {
+            StringWriter writer = new StringWriter();
+            Usuario user = UsuarioServices.getInstancia().find(request.session().attribute(SESSION_NAME));
+            String titulo = request.queryParams("titulo");
+            String descripcion = request.queryParams("descripcion");
+            Date date = new Date();
+            SimpleDateFormat format = new SimpleDateFormat("dd MMM yyyy");
+            Post post = new Post(titulo,descripcion,"",0,user,format.format(date),new HashSet<Etiqueta>());
+            PostService.getInstancia().crearEntidad(post);
+            response.redirect("/");
+            return null;
         });
 
         Spark.post("/signup/guardando", (request, response) -> {
