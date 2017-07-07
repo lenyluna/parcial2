@@ -16,6 +16,16 @@ public class Post implements Serializable {
     private String titulo;
     private String descripcion;
     private String urlimagen;
+    private int accesada;
+
+    public int getAccesada() {
+        return accesada;
+    }
+
+    public void setAccesada(int accesada) {
+        this.accesada = accesada;
+    }
+
     private int views;
     private double imgsize;
     private String fecha;
@@ -34,6 +44,7 @@ public class Post implements Serializable {
         this.user = user;
         this.listaEtiqueta = listaEtiqueta;
         this.fecha = fecha;
+        this.accesada = 0;
     }
 
     public Post(){
@@ -133,5 +144,10 @@ public class Post implements Serializable {
     public int cantViews(){
         int cant=views;
         return views+=1;
+    }
+
+    public int cantAcce(){
+        int cant = accesada;
+        return cant+=1;
     }
 }

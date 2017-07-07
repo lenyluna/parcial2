@@ -44,7 +44,7 @@
             <#if login=="false">
                 <li><a href="/signup/">Sign up</a></li>
             </#if>
-            <#if tipoUser == "AdministradorGeneral" >
+            <#if login=="true">
                 <li><a href="/eliminar/${post.id}">Eliminar</a></li>
                 <li style="padding-top: 15px; padding-left: 800px"><span class="glyphicon glyphicon-user"></span> ${username}</li>
                 <li class="dropdown">
@@ -112,6 +112,9 @@
                         <div class="col-md-6">
                             <h4> <span class="glyphicon glyphicon-hdd"></span> <br> ${bw} Mbps</h4>
                         </div>
+                        <div class="col-md-6">
+                            <h4> <span class="glyphicon glyphicon-link"></span> <br> ${accesada} </h4>
+                        </div>
 
                     </div>
                 </div>
@@ -130,7 +133,7 @@
                 <div class="widget-area no-padding blank">
                     <div class="status-upload">
                       <#if login=="true"> <form role="form" method="post" action="/verpost/${post.id}/comentario">
-                            <textarea name="comentario" placeholder="Comenta Algo!!!" required></textarea>
+                            <textarea name="comentario" placeholder="Comenta Algo!!!"></textarea>
 
                             <button type="submit" class="btn btn-success green"><i class="fa fa-share"></i> Comentar</button>
                         </form>
@@ -170,7 +173,7 @@
                                         <spam class="glyphicon glyphicon-triangle-top"></spam> <small>${comentario.upVote} votes</small></a>
                             </#if>
                             <spam class="glyphicon glyphicon-time"></spam> <small>${comentario.fecha}</small>
-                           <#if login=="true"><a href="/eliminar/${post.id}/comentario/${comentario.id}"> <spam class="glyphicon glyphicon-remove" ></spam> </a></#if>
+                           <#if login=="true"><a href="/eliminar/${post.id}/comentario/${comentario.id}"> <spam class="glyphicon glyphicon-remove"></spam> </a></#if>
                         </h5>
                     </div>
                     <div class="panel-body">${comentario.contenido} </div>
