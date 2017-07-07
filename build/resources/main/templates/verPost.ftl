@@ -44,7 +44,7 @@
             <#if login=="false">
                 <li><a href="/signup/">Sign up</a></li>
             </#if>
-            <#if login=="true">
+            <#if tipoUser == "AdministradorGeneral" >
                 <li><a href="/eliminar/${post.id}">Eliminar</a></li>
                 <li style="padding-top: 15px; padding-left: 800px"><span class="glyphicon glyphicon-user"></span> ${username}</li>
                 <li class="dropdown">
@@ -130,7 +130,7 @@
                 <div class="widget-area no-padding blank">
                     <div class="status-upload">
                       <#if login=="true"> <form role="form" method="post" action="/verpost/${post.id}/comentario">
-                            <textarea name="comentario" placeholder="Comenta Algo!!!"></textarea>
+                            <textarea name="comentario" placeholder="Comenta Algo!!!" required></textarea>
 
                             <button type="submit" class="btn btn-success green"><i class="fa fa-share"></i> Comentar</button>
                         </form>

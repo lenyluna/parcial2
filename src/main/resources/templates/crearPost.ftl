@@ -87,7 +87,7 @@
                 <h4 class="modal-title" id="myModalLabell">Nuevo post</h4>
             </div>
             <div class="modal-body">
-                <form action="/CrearPost/guardando" method="post" role="form">
+                <form action="/CrearPost/guardando" method="post" role="form" enctype="multipart/form-data">
 
                     <div class="form-group">
                         <label for="exampleInputEmail1">Titulo</label>
@@ -104,7 +104,7 @@
 
                     <div class="form-group">
                         <label>Etiquetas</label>
-                        <input type="text" name="etiqueta" class="form-control" id="exampleInputEmail1"/>
+                        <input type="text" name="eti" class="form-control" id="eti"/>
                     </div>
 
 
