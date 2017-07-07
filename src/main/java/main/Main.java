@@ -3,17 +3,18 @@ package main;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.Version;
+import logica.Comentario;
+import logica.Post;
 import logica.Typeline;
 import logica.Usuario;
-import services.ConfigDB;
-import services.EtiquetaServices;
-import services.PostService;
-import services.UsuarioServices;
+import services.*;
 import spark.Request;
 import spark.Spark;
 
 import java.awt.*;
 import java.io.StringWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,10 +51,8 @@ public class Main {
                     map.put("login", "true");
                     map.put("username",user.getUsername());
                     map.put("tipoUser",user.getPrivilegio().name());
-                    map.put("cargando","false");
                 }else {
                     map.put("login", "false");
-                    map.put("cargando","false");
                 }
                 map.put("listPost",PostService.getInstancia().findAll());
                 formTemplate.process(map, writer);
@@ -66,7 +65,7 @@ public class Main {
             return writer;
         });
 
-        Spark.post("/signup/", (request, response) -> {
+        Spark.post("/signup/guardando", (request, response) -> {
             StringWriter writer = new StringWriter();
             try {
                 String username = request.queryParams("username") != null ? request.queryParams("username") : "anonymous";
@@ -77,6 +76,7 @@ public class Main {
                 response.cookie(COOKIE_NAME,username,3600);
                 List<Usuario> allUser = UsuarioServices.getInstancia().findAll();
                 request.session().attribute(SESSION_NAME,allUser.get(allUser.size()-1).getId());
+
                 response.redirect("/");
             } catch (Exception e) {
                 e.printStackTrace();
@@ -89,22 +89,24 @@ public class Main {
             checkCOOKIES(request);
             StringWriter writer = new StringWriter();
             long id = Long.parseLong(request.params("id"));
+            Post post =PostService.getInstancia().find(id);
             try{
                 Template formTemplate = configuration.getTemplate("templates/verPost.ftl");
                 Map<String, Object> map = new HashMap<>();
-                map.put("post",PostService.getInstancia().find(id));
-                map.put("link",PostService.getInstancia().find(id).genLink());
-                map.put("bw",PostService.getInstancia().find(id).anchoBanda());
+                map.put("post",post);
+                map.put("link",post.genLink());
+                map.put("bw",post.anchoBanda());
+                map.put("listComent",post.getListaComentario());
                 if(request.session().attribute(SESSION_NAME)!=null){
                     Usuario user = UsuarioServices.getInstancia().find(request.session().attribute(SESSION_NAME));
                     map.put("login", "true");
                     map.put("username",user.getUsername());
                     map.put("tipoUser",user.getPrivilegio().name());
-                    map.put("cargando","false");
                 }else {
                     map.put("login", "false");
-                    map.put("cargando","true");
                 }
+                post.setViews(post.cantViews());
+                PostService.getInstancia().editar(post);
                 formTemplate.process(map, writer);
             }catch (Exception e){
                 e.printStackTrace();
@@ -127,11 +129,7 @@ public class Main {
 
                 if (result.isEmpty()) {
                     System.out.println("NINGUN USUARIO CON ESA COMBINACION DE PARAMETROS ");
-                    if(Long.parseLong(request.params("ubicar"))!=-1){
-                        response.redirect("/verpost/"+Long.parseLong(request.params("ubicar")));
-                    }else {
-                        response.redirect("/");
-                    }
+                    response.redirect("/errorlogin/");
                 } else {
                     System.out.println("LOGEADO CON EXITO");
                     response.cookie(COOKIE_NAME,username,3600);
@@ -154,7 +152,68 @@ public class Main {
             response.redirect("/");
             return null;
         });
+        Spark.get("/errorlogin/", (request, response) -> {
+            StringWriter writer = new StringWriter();
+            try {
+                Template formTemplate = configuration.getTemplate("templates/login2.ftl");
+                Map<String, Object> map = new HashMap<>();
+                map.put("login", "false");
+                formTemplate.process(map, writer);
+            }catch (Exception e) {
+                e.printStackTrace();
+                response.redirect("/");
+            }
+            return writer;
+        });
+        Spark.get("/signup/", (request, response) -> {
+            StringWriter writer = new StringWriter();
+            try {
+                Template formTemplate = configuration.getTemplate("templates/signup.ftl");
+                Map<String, Object> map = new HashMap<>();
+                map.put("login", "false");
+                formTemplate.process(map, writer);
+            }catch (Exception e) {
+                e.printStackTrace();
+                response.redirect("/");
+            }
+            return writer;
+        });
 
+        Spark.post("/verpost/:id/comentario",(request, response) ->{
+            StringWriter writer = new StringWriter();
+            String comentario = request.queryParams("comentario");
+            long id = Long.parseLong(request.params("id"));
+            Post post = PostService.getInstancia().find(id);
+            Usuario user = UsuarioServices.getInstancia().find(request.session().attribute(SESSION_NAME));
+            if(user!=null) {
+                Date date = new Date();
+                SimpleDateFormat format = new SimpleDateFormat("dd MMM yyyy");
+                Comentario com = new Comentario(comentario,format.format(date).toString(),user, post);
+                post.getListaComentario().add(com);
+                ComentarioService.getInstancia().crearEntidad(com);
+                PostService.getInstancia().editar(post);
+            }
+            response.redirect("/verpost/"+id);
+            return null;
+        });
+
+        Spark.get("/upVote/:id", (request, response) -> {
+            long id = Long.parseLong(request.params("id"));
+            Comentario com = ComentarioService.getInstancia().find(id);
+            com.setUpVote(com.cantUpVote());
+            System.out.println("que lo que"+com.getUpVote());
+            ComentarioService.getInstancia().editar(com);
+            response.redirect("/verpost/"+com.getPost().getId());
+            return null;
+        });
+        Spark.get("/downVote/:id", (request, response) -> {
+            long id = Long.parseLong(request.params("id"));
+            Comentario com = ComentarioService.getInstancia().find(id);
+            com.setDownVote(com.cantDownVote());
+            ComentarioService.getInstancia().editar(com);
+            response.redirect("/verpost/"+com.getPost().getId());
+            return null;
+        });
     }
 
     private static void loadDemo(){

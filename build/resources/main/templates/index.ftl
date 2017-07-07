@@ -22,18 +22,10 @@
         }
 
     </style>
-    <link href="/css/myCSS.css" rel="stylesheet">
 </head>
-<#if cargando=="false">
 <body>
-<#else>
-<body onload="document.getElementById('id01').style.display='block'">
-</#if>
-<div class="navbar navbar-default navbar-fixed-top"
-<div class="container">
-<nav class="navbar navbar-default">
+<div class="navbar navbar-default navbar-fixed-top">
 <div class="container-fluid">
-
     <div class="navbar-header">
         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
             <span class="sr-only">Toggle navigation</span>
@@ -51,24 +43,33 @@
                 <p class="navbar-btn">
                     <a href="#" class="btn btn-success"><span class="glyphicon glyphicon-open" ></span>   Nueva Imagen</a>
                 </p>
-            <li><a href="#">Link</a></li>
+            <#if login=="false">
+            <li><a href="/signup/">Sign up</a></li>
+            </#if>
+        <#if login=="true">
+            <li style="padding-top: 15px; padding-left: 800px"><span class="glyphicon glyphicon-user"></span> ${username}</li>
             <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="glyphicon glyphicon-cog"> <span class="caret"></span></a>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="glyphicon glyphicon-cog"><span class="caret"></span></a>
                 <ul class="dropdown-menu" role="menu">
+                    <#if tipoUser == "AdministradorGeneral" >
                     <li><a href="#"><span class="glyphicon glyphicon-list-alt"></span> Lista de usuarios</a></li>
                     <li class="divider"></li>
+                    </#if>
                     <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span> Log Out</a></li>
-                    <li class="divider"></li>
+                    <!--<li class="divider"></li>
                     <li><a href="#">Separated link</a></li>
                     <li class="divider"></li>
-                    <li><a href="#">One more separated link</a></li>
+                    <li><a href="#">One more separated link</a></li>-->
                 </ul>
             </li>
+            </p>
+        </#if>
         </ul>
-        <form id="signin" class="navbar-form navbar-right" role="form">
+        <#if login=="false">
+        <form id="signin" class="navbar-form navbar-right" role="form" action="/login/-1" method="post">
             <div class="input-group">
                 <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                <input id="email" type="email" class="form-control" name="email" value="" placeholder="Email Address" required />
+                <input  type="text" class="form-control" name="username" value="" placeholder="Username" required />
             </div>
 
             <div class="input-group">
@@ -76,13 +77,11 @@
                 <input id="password" type="password" class="form-control" name="password" value="" placeholder="Password" required/>
             </div>
 
-            <button type="submit" class="btn btn-primary">Login</button>
+            <button type="submit" class="btn btn-primary"> <span class="glyphicon glyphicon-send"></span> Login</button>
         </form>
-
+        </#if>
     </div>
 </div>
-</nav>
- </div>
 </div>
 
 <div class="container">
@@ -107,8 +106,6 @@
     </div>
 
 </div><!-- /.container -->
-<script src="/js/jquery.js"></script>
-<script src="/js/myJquery.js"></script>
 </body>
 
 </html>

@@ -129,4 +129,9 @@ public class Post implements Serializable {
         double total=0;
         return total= views*imgsize;
     }
+
+    public int cantViews(){
+        int cant=views;
+        return views+=1;
+    }
 }

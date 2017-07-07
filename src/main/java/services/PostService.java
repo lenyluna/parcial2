@@ -1,5 +1,6 @@
 package services;
 
+import logica.Comentario;
 import logica.Etiqueta;
 import logica.Post;
 
@@ -30,6 +31,7 @@ public class PostService extends GestionDB<Post>  {
         listEtiqueta.add(EtiquetaServices.getInstancia().findEtiquetaByName("Memes"));
         listEtiqueta.add(EtiquetaServices.getInstancia().findEtiquetaByName("Funny"));
         Post post= new Post("Funny Meme Dump", "YUCA","/yucaImagenes/post1.png",1.40,findAllByUser("lenyluna"),"6 julio 2017",listEtiqueta);
+        post.setListaComentario(new HashSet<Comentario>());
         post.setViews(20);
         crearEntidad(post);
         Set<Etiqueta> listEtiqueta2  = new HashSet<>();
@@ -37,6 +39,7 @@ public class PostService extends GestionDB<Post>  {
         listEtiqueta2.add(EtiquetaServices.getInstancia().findEtiquetaByName("Bar"));
         listEtiqueta2.add(EtiquetaServices.getInstancia().findEtiquetaByName("Romo"));
         Post post2 = new Post("Troleando a mami", "Batata","/yucaImagenes/post2.jpg",0.101,findAllByUser("zomgod"),"6 julio 2017",listEtiqueta2);
+        post2.setListaComentario(new HashSet<Comentario>());
         post2.setViews(10);
         crearEntidad(post2);
     }
