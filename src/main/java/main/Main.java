@@ -144,7 +144,7 @@ public class Main {
 
                 Part uploadedFile = request.raw().getPart("img");
 
-                File theDir = new File("src/main/resources/public/yucaImagenes");
+                File theDir = new File("src/main/resources/publico/yucaImagenes/");
 
 // if the directory does not exist, create it
                 if (!theDir.exists()) {
@@ -161,7 +161,7 @@ public class Main {
                         System.out.println("DIR created");
                     }
                 }
-                Path out = Paths.get(theDir + fName);
+                Path out = Paths.get(theDir+ "/" + fName);
                 try (final InputStream in = uploadedFile.getInputStream()) {
                     Files.copy(in, out);
                     uploadedFile.delete();
