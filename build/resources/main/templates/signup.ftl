@@ -94,7 +94,7 @@
                     <div class="form-group">
                         <label for="email" class="col-md-3 control-label">Name:</label>
                         <div class="col-md-9">
-                            <input type="text" class="form-control" name="name" required>
+                            <input type="text" class="form-control" name="name" required/>
                         </div>
                     </div>
 
@@ -107,7 +107,7 @@
                     <div class="form-group">
                         <label for="lastname" class="col-md-3 control-label">Email:</label>
                         <div class="col-md-9">
-                            <input type="Email" class="form-control" name="email" >
+                            <input type="text" class="form-control" name="email" >
                         </div>
                     </div>
                     <div class="form-group">

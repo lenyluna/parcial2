@@ -125,24 +125,22 @@
         </tr>
         </tfoot>
         <tbody>
-<#list listEstudiantes as user>
+<#list listUser as usuario>
         <tr>
-            <td>user.name</td>
-            <td>user.username</td>
-            <td>user.correo</td>
-            <td>user.privilegio</td>
+            <#if usuario.privilegio!="AdministradorGeneral">
+            <td>${usuario.name}</td>
+            <td>${usuario.username}</td>
+                <td>${usuario.correo}</td>
+            <td>${usuario.privilegio}</td>
             <td>
-                <a class="btn btn-info btn-xs" href="#" role="button">
-                    <spam class="glyphicon glyphicon-eye-open"></spam>
-                    Ver</a>
-                <a class="btn btn-warning btn-xs" href="#" role="button">
+                <a class="btn btn-warning btn-xs" href="/cambiarPrivi/${usuario.id}/" role="button">
                     <spam class="glyphicon glyphicon-lock"></spam>
                     Admin</a>
-                <a class="btn btn-danger btn-xs" href="#" role="button">
+                <a class="btn btn-danger btn-xs" href="/eliminar/${usuario.id}" role="button">
                     <spam class="glyphicon glyphicon-remove"></spam>
                     Eliminar</a>
             </td>
-
+            </#if>
         </tr>
 </#list>
         </tbody>

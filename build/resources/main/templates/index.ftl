@@ -51,7 +51,7 @@
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="glyphicon glyphicon-cog"><span class="caret"></span></a>
                 <ul class="dropdown-menu" role="menu">
                     <#if tipoUser == "AdministradorGeneral" >
-                    <li><a href="#"><span class="glyphicon glyphicon-list-alt"></span> Lista de usuarios</a></li>
+                    <li><a href="/listUsuario/"><span class="glyphicon glyphicon-list-alt"></span> Lista de usuarios</a></li>
                     <li class="divider"></li>
                     </#if>
                     <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span> Log Out</a></li>

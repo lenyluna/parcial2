@@ -195,8 +195,8 @@ public class Main {
             try {
                 String username = request.queryParams("username") != null ? request.queryParams("username") : "anonymous";
                 String password = request.queryParams("password") != null ? request.queryParams("password") : "unknown";
-                String nombre = request.queryParams("nombre") != null ? request.queryParams("nombre") : "unknown";
-                String correo = request.queryParams("email") != null ? request.queryParams("nombre") : "unknown";
+                String nombre = request.queryParams("name") != null ? request.queryParams("name") : "unknown";
+                String correo = request.queryParams("email") != null ? request.queryParams("email") : "unknown";
                 UsuarioServices.getInstancia().crearEntidad(new Usuario(nombre, username, password, correo, Typeline.Normal));
                 response.cookie(COOKIE_NAME, username, 3600);
                 List<Usuario> allUser = UsuarioServices.getInstancia().findAll();
@@ -303,6 +303,24 @@ public class Main {
             return writer;
         });
 
+        Spark.get("/listUsuario/", (request, response) -> {
+            StringWriter writer = new StringWriter();
+            try {
+                Template formTemplate = configuration.getTemplate("templates/usuarios.ftl");
+                Map<String, Object> map = new HashMap<>();
+                Usuario user = UsuarioServices.getInstancia().find(request.session().attribute(SESSION_NAME));
+                map.put("login", "true");
+                map.put("username", user.getUsername());
+                map.put("tipoUser", user.getPrivilegio().name());
+                map.put("listUser",UsuarioServices.getInstancia().findAll());
+                formTemplate.process(map, writer);
+            } catch (Exception e) {
+                e.printStackTrace();
+                response.redirect("/");
+            }
+            return writer;
+        });
+
         Spark.post("/verpost/:id/comentario", (request, response) -> {
             StringWriter writer = new StringWriter();
             String comentario = request.queryParams("comentario");
@@ -362,6 +380,22 @@ public class Main {
             Comentario com = ComentarioService.getInstancia().find(id);
             ComentarioService.getInstancia().eliminar(id);
             response.redirect("/verpost/" + idPost);
+            return null;
+        });
+
+        Spark.get("/cambiarPrivi/:id/", (request, response) -> {
+            long id = Long.parseLong(request.params("id"));
+            Usuario user = UsuarioServices.getInstancia().find(id);
+            user.setPrivilegio(Typeline.AdministradorAdquirido);
+            UsuarioServices.getInstancia().editar(user);
+            response.redirect("/listUsuario/");
+            return null;
+        });
+
+        Spark.get("/eliminar/:id", (request, response) -> {
+            long id = Long.parseLong(request.params("id"));
+            UsuarioServices.getInstancia().eliminar(id);
+            response.redirect("/listUsuario/");
             return null;
         });
     }
