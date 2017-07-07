@@ -27,6 +27,9 @@ public class Mensaje implements Serializable {
         this.fecha = fecha;
     }
 
+    public Mensaje(){
+
+    }
     public long getId() {
         return id;
     }

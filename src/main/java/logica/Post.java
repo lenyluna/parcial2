@@ -18,6 +18,7 @@ public class Post implements Serializable {
     private String urlimagen;
     private int views;
     private double imgsize;
+    private String fecha;
     @ManyToOne(targetEntity = Usuario.class)
     private Usuario user;
     @OneToMany(targetEntity = Etiqueta.class,fetch = FetchType.EAGER)
@@ -25,13 +26,25 @@ public class Post implements Serializable {
     @OneToMany(targetEntity = Comentario.class,mappedBy = "post",fetch = FetchType.EAGER)
     private Set<Comentario> listaComentario;
 
-    public Post(String titulo, String descripcion, String urlimagen, double imgsize, Usuario user, Set<Etiqueta> listaEtiqueta) {
+    public Post(String titulo, String descripcion, String urlimagen, double imgsize, Usuario user,String fecha, Set<Etiqueta> listaEtiqueta) {
         this.titulo = titulo;
         this.descripcion = descripcion;
         this.urlimagen = urlimagen;
         this.imgsize = imgsize;
         this.user = user;
         this.listaEtiqueta = listaEtiqueta;
+        this.fecha = fecha;
+    }
+
+    public Post(){
+
+    }
+    public String getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(String fecha) {
+        this.fecha = fecha;
     }
 
     public long getId() {
@@ -104,5 +117,16 @@ public class Post implements Serializable {
 
     public void setListaComentario(Set<Comentario> listaComentario) {
         this.listaComentario = listaComentario;
+    }
+
+    public String genLink(){
+        String link="";
+
+        return link="/local/";
+    }
+
+    public Double anchoBanda(){
+        double total=0;
+        return total= views*imgsize;
     }
 }

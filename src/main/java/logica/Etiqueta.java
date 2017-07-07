@@ -20,6 +20,7 @@ public class Etiqueta implements Serializable {
         this.name = name;
     }
 
+    public Etiqueta(){}
     public long getId() {
         return id;
     }

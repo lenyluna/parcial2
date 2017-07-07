@@ -20,6 +20,10 @@ public class Comentario implements Serializable {
     private int upVote;
     private int downVote;
 
+    public Comentario(){
+
+    }
+
     public Comentario(String contenido, String fecha, Usuario autor, Post post) {
         this.contenido = contenido;
         this.fecha = fecha;

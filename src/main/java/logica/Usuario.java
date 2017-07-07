@@ -2,6 +2,7 @@ package logica;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -17,7 +18,7 @@ public class Usuario implements Serializable {
     private String password;
     private String correo;
     private Typeline privilegio;
-    @OneToMany(targetEntity = Mensaje.class,mappedBy = "destino",fetch = FetchType.EAGER)
+    @OneToMany(targetEntity = Mensaje.class,mappedBy = "emisor",fetch = FetchType.EAGER)
     private Set<Mensaje> listaMensaje;
 
     public Usuario(String name, String username, String password, String correo, Typeline privilegio) {
@@ -26,6 +27,11 @@ public class Usuario implements Serializable {
         this.password = password;
         this.correo = correo;
         this.privilegio = privilegio;
+        this.listaMensaje = new HashSet<>();
+    }
+
+    public Usuario(){
+
     }
 
     public long getId() {

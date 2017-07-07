@@ -1,5 +1,6 @@
 package services;
 
+import logica.Etiqueta;
 import logica.Usuario;
 
 import javax.persistence.*;
@@ -47,18 +48,15 @@ public class GestionDB<T> {
     }
 
     public void crearEntidad(T entidad){
-        boolean veri = false;
         EntityManager em= getEntityManager();
 
         try{
             if(em.find(claseEntidad, getValorCampo(entidad))!=null){
                 System.out.println("No se creo la entidad porque ya existe");
-                veri= true;
             }
         }catch (IllegalArgumentException ex){
             System.out.println("Parametros igeal.");
         }
-        if(!veri) {
             em.getTransaction().begin();
             try{
                 em.persist(entidad);
@@ -68,7 +66,6 @@ public class GestionDB<T> {
             } finally {
                 em.close();
             }
-        }
 
     }
 
@@ -127,5 +124,21 @@ public class GestionDB<T> {
         } finally {
             em.close();
         }
+    }
+
+    public Usuario findAllByUser(String username){
+        EntityManager em = getEntityManager();
+        Query query = em.createQuery("select e from Usuario e where e.username like :username");
+        query.setParameter("username", "%"+username+"%");
+        return (Usuario) query.getSingleResult();
+
+    }
+
+    public Etiqueta findEtiquetaByName(String name){
+        EntityManager em = getEntityManager();
+        Query query = em.createQuery("select e from Etiqueta e where e.name like :name");
+        query.setParameter("name", "%"+name+"%");
+        return (Etiqueta) query.getSingleResult();
+
     }
 }

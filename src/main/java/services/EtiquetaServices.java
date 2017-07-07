@@ -19,4 +19,12 @@ public class EtiquetaServices extends GestionDB<Etiqueta>{
         }
         return instancia;
     }
+
+    public void cargarDemo(){
+        crearEntidad(new Etiqueta("Memes"));
+        crearEntidad(new Etiqueta("Funny"));
+        crearEntidad(new Etiqueta("Madre"));
+        crearEntidad(new Etiqueta("Bar"));
+        crearEntidad(new Etiqueta("Romo"));
+    }
 }
