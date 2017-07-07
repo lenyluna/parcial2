@@ -222,6 +222,7 @@ public class Main {
                 map.put("link", post.genLink());
                 map.put("bw", post.anchoBanda());
                 map.put("listComent", post.getListaComentario());
+                map.put("accesada",post.getAccesada());
                 if (request.session().attribute(SESSION_NAME) != null) {
                     Usuario user = UsuarioServices.getInstancia().find(request.session().attribute(SESSION_NAME));
                     map.put("login", "true");
