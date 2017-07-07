@@ -97,14 +97,12 @@ public class Main {
             try {
                 Usuario user = UsuarioServices.getInstancia().find(request.session().attribute(SESSION_NAME));
                 String titulo = request.queryParams("titulo") != null ? request.queryParams("titulo") : "unknown";
-                ;
                 String descripcion = request.queryParams("descripcion") != null ? request.queryParams("descripcion") : "unknown";
-                ;
                 String etiquetas = request.queryParams("eti") != null ? request.queryParams("eti") : "unknown";
                 System.out.println("ETIQUETAS COJOYO:" + etiquetas);
                 String etiqueta[] = etiquetas.split(",");
                 Set<Etiqueta> listEtiqueta = new HashSet<>();
-                if (etiqueta.length != 0) {
+            /*    if (etiqueta.length != 0) {
                     for (int i = 0; i < etiqueta.length; i++) {
                         Etiqueta et = EtiquetaServices.getInstancia().findEtiquetaByName(etiqueta[i]);
                         if (et == null) {
@@ -115,7 +113,7 @@ public class Main {
                             listEtiqueta.add(et);
                         }
                     }
-                }
+                }*/
 
                 //----------------------------------------------------------
 
@@ -138,6 +136,7 @@ public class Main {
                 }*/
 
                 String fName = request.raw().getPart("img").getSubmittedFileName();
+                double fsize = request.raw().getPart("img").getSize();
                 System.out.println("-----------------------------------");
                 System.out.println("Title: " + request.raw().getParameter("title"));
                 System.out.println("File: " + fName);
@@ -175,8 +174,8 @@ public class Main {
                 //----------------------------------------------------------
                 Date date = new Date();
                 SimpleDateFormat format = new SimpleDateFormat("dd MMM yyyy");
-                Post post = new Post(titulo, descripcion, "", 0, user, format.format(date), listEtiqueta);
-                post.setImgsize(2.5);
+                Post post = new Post(titulo, descripcion, "/yucaImagenes/" +fName, fsize, user, format.format(date), listEtiqueta);
+               // post.setImgsize(2.5);
                 PostService.getInstancia().crearEntidad(post);
                 response.redirect("/");
 
