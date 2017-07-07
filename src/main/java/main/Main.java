@@ -91,6 +91,9 @@ public class Main {
             return writer;
         });
 
+
+
+
         Spark.post("/CrearPost/guardando", "multipart/form-data", (request, response) -> {
             StringWriter writer = new StringWriter();
 
@@ -175,6 +178,8 @@ public class Main {
                 Date date = new Date();
                 SimpleDateFormat format = new SimpleDateFormat("dd MMM yyyy");
                 Post post = new Post(titulo, descripcion, "/yucaImagenes/" +fName, fsize, user, format.format(date), listEtiqueta);
+                String uuid = UUID.randomUUID().toString();
+                post.setHash(uuid);
                // post.setImgsize(2.5);
                 PostService.getInstancia().crearEntidad(post);
                 response.redirect("/");
@@ -215,6 +220,40 @@ public class Main {
             long id = Long.parseLong(request.params("id"));
             Post post = PostService.getInstancia().find(id);
             try {
+                Template formTemplate = configuration.getTemplate("templates/verPost.ftl");
+                Map<String, Object> map = new HashMap<>();
+                map.put("post", post);
+                map.put("link", post.genLink());
+                map.put("bw", post.anchoBanda());
+                map.put("listComent", post.getListaComentario());
+                map.put("accesada",post.getAccesada());
+                if (request.session().attribute(SESSION_NAME) != null) {
+                    Usuario user = UsuarioServices.getInstancia().find(request.session().attribute(SESSION_NAME));
+                    map.put("login", "true");
+                    map.put("username", user.getUsername());
+                    map.put("tipoUser", user.getPrivilegio().name());
+                } else {
+                    map.put("login", "false");
+                }
+                post.setViews(post.cantViews());
+                PostService.getInstancia().editar(post);
+                formTemplate.process(map, writer);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return writer;
+        });
+
+        Spark.get("/post/:id", (request, response) -> {
+            checkCOOKIES(request);
+
+
+            StringWriter writer = new StringWriter();
+            try {
+            long id = Long.parseLong(request.params("id"));
+            Post post = PostService.getInstancia().findH(id);
+
                 Template formTemplate = configuration.getTemplate("templates/verPost.ftl");
                 Map<String, Object> map = new HashMap<>();
                 map.put("post", post);

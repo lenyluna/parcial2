@@ -16,16 +16,8 @@ public class Post implements Serializable {
     private String titulo;
     private String descripcion;
     private String urlimagen;
+    private String hash;
     private int accesada;
-
-    public int getAccesada() {
-        return accesada;
-    }
-
-    public void setAccesada(int accesada) {
-        this.accesada = accesada;
-    }
-
     private int views;
     private double imgsize;
     private String fecha;
@@ -61,6 +53,16 @@ public class Post implements Serializable {
     public long getId() {
         return id;
     }
+
+
+    public int getAccesada() {
+        return accesada;
+    }
+
+    public void setAccesada(int accesada) {
+        this.accesada = accesada;
+    }
+
 
     public void setId(long id) {
         this.id = id;
@@ -131,9 +133,17 @@ public class Post implements Serializable {
     }
 
     public String genLink(){
-        String link="";
+        String link="http://localhost:4567/post/" + getHash();
 
-        return link="/local/";
+        return link;
+    }
+
+    public String getHash() {
+        return hash;
+    }
+
+    public void setHash(String hash) {
+        this.hash = hash;
     }
 
     public Double anchoBanda(){

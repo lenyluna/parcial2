@@ -1,6 +1,7 @@
 package services;
 
 import logica.Etiqueta;
+import logica.Post;
 import logica.Usuario;
 
 import javax.persistence.*;
@@ -92,6 +93,13 @@ public class GestionDB<T> {
         } finally {
             em.close();
         }
+    }
+
+    public Post findH(Object hash) {
+        EntityManager em = getEntityManager();
+        Query query = em.createQuery("select e from Post e where e.hash like :h");
+        query.setParameter("h", "%"+hash+"%");
+        return (Post) query.getSingleResult();
     }
 
 
