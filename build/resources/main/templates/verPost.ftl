@@ -45,6 +45,7 @@
                 <li><a href="/signup/">Sign up</a></li>
             </#if>
             <#if login=="true">
+                <li><a href="/eliminar/${post.id}">Eliminar</a></li>
                 <li style="padding-top: 15px; padding-left: 800px"><span class="glyphicon glyphicon-user"></span> ${username}</li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="glyphicon glyphicon-cog"><span class="caret"></span></a>
@@ -109,9 +110,6 @@
                             <h4> <span class="glyphicon glyphicon-eye-open"></span> <br> ${post.views} Views </h4>
                         </div>
                         <div class="col-md-6">
-                            <h4> <span class="glyphicon glyphicon-star"></span> <br> 122456 Stars </h4>
-                        </div>
-                        <div class="col-md-6">
                             <h4> <span class="glyphicon glyphicon-hdd"></span> <br> ${bw} Mbps</h4>
                         </div>
 
@@ -131,11 +129,12 @@
             <div class="col-md-8 col-md-offset-2">
                 <div class="widget-area no-padding blank">
                     <div class="status-upload">
-                        <form role="form" method="post" action="/verpost/${post.id}/comentario">
+                      <#if login=="true"> <form role="form" method="post" action="/verpost/${post.id}/comentario">
                             <textarea name="comentario" placeholder="Comenta Algo!!!"></textarea>
 
                             <button type="submit" class="btn btn-success green"><i class="fa fa-share"></i> Comentar</button>
                         </form>
+                      </#if>
                     </div>
                     <!-- Status Upload  -->
                 </div>
@@ -158,13 +157,20 @@
                     <div class="panel-heading">
                         <h5 class="panel-title">
                             ${comentario.autor.username}
-                            <a href="/downVote/${comentario.id}">
+                            <#if login=="true"><a href="/downVote/${comentario.id}" >
                                 <spam class="glyphicon glyphicon-triangle-bottom"></spam> <small>${comentario.downVote} votes</small></a>
 
                             <a href="/upVote/${comentario.id}">
                                 <spam class="glyphicon glyphicon-triangle-top"></spam> <small>${comentario.upVote} votes</small></a>
+                            <#else>
+                                <a  class="button" style="text-decoration:none">
+                                    <spam class="glyphicon glyphicon-triangle-bottom"></spam> <small>${comentario.downVote} votes</small></a>
 
+                                    <a class="button" style="text-decoration:none">
+                                        <spam class="glyphicon glyphicon-triangle-top"></spam> <small>${comentario.upVote} votes</small></a>
+                            </#if>
                             <spam class="glyphicon glyphicon-time"></spam> <small>${comentario.fecha}</small>
+                           <#if login=="true"><a href="/eliminar/${post.id}/comentario/${comentario.id}"> <spam class="glyphicon glyphicon-remove" ></spam> </a></#if>
                         </h5>
                     </div>
                     <div class="panel-body">${comentario.contenido} </div>

@@ -104,20 +104,13 @@
 
                     <div class="form-group">
                         <label>Etiquetas</label>
-                        <select required multiple="multiple" id="etiquetes" class="form-control" style="width: 100%;" name="etiqueta">
-                            <option selected="selected">Naturaleza</option>
-                            <option>Tecnologia</option>
-                            <option>Politica</option>
-                            <option>Gatos</option>
-                            <option>Memes</option>
-                            <option>Perros</option>
-                        </select>
+                        <input type="text" name="etiqueta" class="form-control" id="exampleInputEmail1"/>
                     </div>
 
 
                     <div class="form-group">
                         <label for="exampleInputEmail1">Foto</label>
-                        <input required type="file" id="fileinput" multiple="multiple" accept="image/*" />
+                        <input required type="file" id="fileinput" accept="image/*" name="img"/>
 
                     </div>
 

@@ -3,13 +3,19 @@ package main;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.Version;
+import javafx.geometry.Pos;
 import logica.*;
 import services.*;
 import spark.Request;
 import spark.Spark;
 
 import java.awt.*;
+import java.io.IOException;
 import java.io.StringWriter;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
@@ -64,9 +70,13 @@ public class Main {
             Usuario user = UsuarioServices.getInstancia().find(request.session().attribute(SESSION_NAME));
             Template formTemplate = configuration.getTemplate("templates/crearPost.ftl");
             Map<String, Object> map = new HashMap<>();
-            map.put("username",user.getUsername());
-            map.put("login", "true");
-            map.put("tipoUser",user.getPrivilegio().name());
+            if(user!=null) {
+                map.put("username", user.getUsername());
+                map.put("login", "true");
+                map.put("tipoUser", user.getPrivilegio().name());
+            } else {
+
+            }
             formTemplate.process(map, writer);
             return writer;
         });
@@ -76,9 +86,24 @@ public class Main {
             Usuario user = UsuarioServices.getInstancia().find(request.session().attribute(SESSION_NAME));
             String titulo = request.queryParams("titulo");
             String descripcion = request.queryParams("descripcion");
+            String etiqueta[] = request.queryParams("etiqueta").split(",");
+            Set<Etiqueta> listEtiqueta  = new HashSet<>();
+            if(etiqueta.length!=0) {
+                for (int i = 0; i < etiqueta.length; i++) {
+                    Etiqueta et = EtiquetaServices.getInstancia().findEtiquetaByName(etiqueta[i]);
+                    if (et == null) {
+                        Etiqueta et2 = new Etiqueta(etiqueta[i]);
+                        EtiquetaServices.getInstancia().crearEntidad(et2);
+                        listEtiqueta.add(et2);
+                    } else {
+                        listEtiqueta.add(et);
+                    }
+                }
+            }
             Date date = new Date();
             SimpleDateFormat format = new SimpleDateFormat("dd MMM yyyy");
-            Post post = new Post(titulo,descripcion,"",0,user,format.format(date),new HashSet<Etiqueta>());
+            Post post = new Post(titulo,descripcion,"",0,user,format.format(date),listEtiqueta);
+            post.setImgsize(2.5);
             PostService.getInstancia().crearEntidad(post);
             response.redirect("/");
             return null;
@@ -233,6 +258,32 @@ public class Main {
             response.redirect("/verpost/"+com.getPost().getId());
             return null;
         });
+
+        Spark.get("/eliminar/:id", (request, response) -> {
+            long id = Long.parseLong(request.params("id"));
+            Post post = PostService.getInstancia().find(id);
+            deleteComen(post);
+            ArrayList<Etiqueta> arrayList =new ArrayList<>();
+            for(Etiqueta et : post.getListaEtiqueta()){
+                arrayList.add(et);
+            }
+            post.getListaEtiqueta().removeAll(post.getListaEtiqueta());
+            post.getListaComentario().removeAll(post.getListaComentario());
+            PostService.getInstancia().eliminar(id);
+            veryDeleteEtique(arrayList);
+            response.redirect("/");
+            return null;
+        });
+
+        Spark.get("/eliminar/:idPost/comentario/:id", (request, response) -> {
+            long id = Long.parseLong(request.params("id"));
+            long idPost = Long.parseLong(request.params("idPost"));
+            System.out.println("comentario"+id);
+            Comentario com = ComentarioService.getInstancia().find(id);
+            ComentarioService.getInstancia().eliminar(id);
+            response.redirect("/verpost/"+idPost);
+            return null;
+        });
     }
 
     private static void loadDemo(){
@@ -256,6 +307,29 @@ public class Main {
                 System.out.println("que lo que con que lo que ");
                 System.out.println("COOKIE ENCONTRADA" + cookies.get(COOKIE_NAME));
                 req.session().attribute(SESSION_NAME, cookies.get(COOKIE_NAME));
+            }
+        }
+    }
+
+    private static void deleteComen(Post post ){
+        for (Comentario com : post.getListaComentario()) {
+            ComentarioService.getInstancia().eliminar(com.getId());
+        }
+    }
+
+    private static void veryDeleteEtique(ArrayList<Etiqueta> listEt){
+        for(Etiqueta et2 : listEt) {
+            for (Post post : PostService.getInstancia().findAll()) {
+                for (Etiqueta et : post.getListaEtiqueta()) {
+                    if (et2.getName().equalsIgnoreCase(et.getName())) {
+                        listEt.remove(et2);
+                    }
+                }
+            }
+        }
+        if(listEt.size()!=0){
+            for(Etiqueta et1: listEt){
+                EtiquetaServices.getInstancia().eliminar(et1.getId());
             }
         }
     }
