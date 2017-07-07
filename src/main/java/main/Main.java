@@ -69,17 +69,25 @@ public class Main {
 
         Spark.get("/CrearPost/", (request, response) -> {
             StringWriter writer = new StringWriter();
-            Usuario user = UsuarioServices.getInstancia().find(request.session().attribute(SESSION_NAME));
-            Template formTemplate = configuration.getTemplate("templates/crearPost.ftl");
-            Map<String, Object> map = new HashMap<>();
-            if (user != null) {
-                map.put("username", user.getUsername());
-                map.put("login", "true");
-                map.put("tipoUser", user.getPrivilegio().name());
-            } else {
+            try {
+                Usuario user = UsuarioServices.getInstancia().find(request.session().attribute(SESSION_NAME));
+                Template formTemplate = configuration.getTemplate("templates/crearPost.ftl");
+                Map<String, Object> map = new HashMap<>();
+                if (user != null) {
+                    map.put("username", user.getUsername());
+                    map.put("login", "true");
+                    map.put("tipoUser", user.getPrivilegio().name());
+                } else {
+                    map.put("username", "anoonymous");
+                    map.put("login", "false");
+                    map.put("tipoUser", "4");
+                }
+                formTemplate.process(map, writer);
 
+            } catch (Exception e) {
+                e.printStackTrace();
+                response.redirect("/");
             }
-            formTemplate.process(map, writer);
             return writer;
         });
 
@@ -88,8 +96,10 @@ public class Main {
 
             try {
                 Usuario user = UsuarioServices.getInstancia().find(request.session().attribute(SESSION_NAME));
-                String titulo = request.queryParams("titulo") != null ? request.queryParams("titulo") : "unknown";;
-                String descripcion = request.queryParams("descripcion") != null ? request.queryParams("descripcion") : "unknown";;
+                String titulo = request.queryParams("titulo") != null ? request.queryParams("titulo") : "unknown";
+                ;
+                String descripcion = request.queryParams("descripcion") != null ? request.queryParams("descripcion") : "unknown";
+                ;
                 String etiquetas = request.queryParams("eti") != null ? request.queryParams("eti") : "unknown";
                 System.out.println("ETIQUETAS COJOYO:" + etiquetas);
                 String etiqueta[] = etiquetas.split(",");
@@ -134,7 +144,7 @@ public class Main {
 
                 Part uploadedFile = request.raw().getPart("img");
 
-                File theDir = new File("img/");
+                File theDir = new File("src/main/resources/public/yucaImagenes");
 
 // if the directory does not exist, create it
                 if (!theDir.exists()) {
