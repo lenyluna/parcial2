@@ -41,7 +41,7 @@
             <ul class="nav navbar-nav">
                 <li>
                     <p class="navbar-btn">
-                        <a href="#" class="btn btn-success"><span class="glyphicon glyphicon-open" ></span>   Nueva Imagen</a>
+                        <a href="/CrearPost/" class="btn btn-success"><span class="glyphicon glyphicon-open" ></span>   Nueva Imagen</a>
                     </p>
             <#if login=="true">
                 <li style="padding-top: 15px; padding-left: 800px"><span class="glyphicon glyphicon-user"></span> ${username}</li>

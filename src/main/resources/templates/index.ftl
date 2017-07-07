@@ -35,14 +35,13 @@
         </button>
         <a class="navbar-brand" href="/">PicAbu!</a>
     </div>
-
-
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav">
             <li>
                 <p class="navbar-btn">
-                    <a href="#" class="btn btn-success"><span class="glyphicon glyphicon-open" ></span>   Nueva Imagen</a>
+                    <a href="/CrearPost/" class="btn btn-success" ><span class="glyphicon glyphicon-open" ></span> Nueva Imgen</a>
                 </p>
+            </li>
             <#if login=="false">
             <li><a href="/signup/">Sign up</a></li>
             </#if>
@@ -100,12 +99,12 @@
         </#list>
         </div>
 
-
-
-
     </div>
 
 </div><!-- /.container -->
 </body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+
+<script src="/js/myJava.js" type="text/javascript"> </script>
 
 </html>

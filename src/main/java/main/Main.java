@@ -64,6 +64,17 @@ public class Main {
 
             return writer;
         });
+        Spark.get("/CrearPost/",(request, response) -> {
+            StringWriter writer = new StringWriter();
+            Usuario user = UsuarioServices.getInstancia().find(request.session().attribute(SESSION_NAME));
+            Template formTemplate = configuration.getTemplate("templates/crearPost.ftl");
+            Map<String, Object> map = new HashMap<>();
+            map.put("username",user.getUsername());
+            map.put("login", "true");
+            map.put("tipoUser",user.getPrivilegio().name());
+            formTemplate.process(map, writer);
+            return writer;
+        });
 
         Spark.post("/signup/guardando", (request, response) -> {
             StringWriter writer = new StringWriter();
