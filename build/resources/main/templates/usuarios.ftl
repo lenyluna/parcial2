@@ -109,6 +109,7 @@
         <tr>
             <th>Nombre</th>
             <th>Username</th>
+            <th>Correo</th>
             <th>Privilegio</th>
             <th></th>
         </thead>
@@ -116,6 +117,7 @@
         <tr>
             <th>Nombre</th>
             <th>Username</th>
+            <th>Correo</th>
             <th>Privilegio</th>
             <th>
             </th>
@@ -128,6 +130,7 @@
             <#if usuario.privilegio!="AdministradorGeneral">
             <td>${usuario.name}</td>
             <td>${usuario.username}</td>
+                <td>${usuario.correo}</td>
             <td>${usuario.privilegio}</td>
             <td>
                 <a class="btn btn-warning btn-xs" href="/cambiarPrivi/${usuario.id}/" role="button">

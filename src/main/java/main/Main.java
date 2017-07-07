@@ -185,8 +185,8 @@ public class Main {
             try {
                 String username = request.queryParams("username") != null ? request.queryParams("username") : "anonymous";
                 String password = request.queryParams("password") != null ? request.queryParams("password") : "unknown";
-                String nombre = request.queryParams("nombre") != null ? request.queryParams("nombre") : "unknown";
-                String correo = request.queryParams("email") != null ? request.queryParams("nombre") : "unknown";
+                String nombre = request.queryParams("name") != null ? request.queryParams("name") : "unknown";
+                String correo = request.queryParams("email") != null ? request.queryParams("email") : "unknown";
                 UsuarioServices.getInstancia().crearEntidad(new Usuario(nombre, username, password, correo, Typeline.Normal));
                 response.cookie(COOKIE_NAME, username, 3600);
                 List<Usuario> allUser = UsuarioServices.getInstancia().findAll();
