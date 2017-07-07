@@ -29,6 +29,8 @@ public class Comentario implements Serializable {
         this.fecha = fecha;
         this.autor = autor;
         this.post = post;
+        this.upVote = 0;
+        this.downVote=0;
     }
 
     public long getId() {
@@ -85,5 +87,14 @@ public class Comentario implements Serializable {
 
     public void setDownVote(int downVote) {
         this.downVote = downVote;
+    }
+
+    public int cantUpVote(){
+        int cant=upVote;
+        return cant+=1;
+    }
+    public int cantDownVote(){
+        int cant=downVote;
+        return cant+=1;
     }
 }
