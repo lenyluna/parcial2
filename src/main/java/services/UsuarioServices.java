@@ -3,6 +3,8 @@ package services;
 import logica.Typeline;
 import logica.Usuario;
 
+import java.util.UUID;
+
 /**
  * Created by Leny96 on 5/7/2017.
  */
@@ -20,6 +22,7 @@ public class UsuarioServices extends GestionDB<Usuario> {
         return instancia;
     }
     public void cargarDemo(){
+
         Usuario user = new Usuario("Leny","lenyluna","admin","leny0023@hotmail.com",Typeline.AdministradorGeneral);
         Usuario user1 =new Usuario("Starling","zomgod","root","starling.j@hotmail.com",Typeline.AdministradorGeneral);
         crearEntidad(user1);

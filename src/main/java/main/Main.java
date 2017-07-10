@@ -92,8 +92,6 @@ public class Main {
         });
 
 
-
-
         Spark.post("/CrearPost/guardando", "multipart/form-data", (request, response) -> {
             StringWriter writer = new StringWriter();
             try {
@@ -104,11 +102,10 @@ public class Main {
                 System.out.println("ETIQUETAS COJOYO:" + etiquetas);
                 String etiqueta[] = etiquetas.split(",");
                 Set<Etiqueta> listEtiqueta = new HashSet<>();
-<<<<<<< Updated upstream
+
             /*    if (etiqueta.length != 0) {
-=======
                 /*if (etiqueta.length != 0) {
->>>>>>> Stashed changes
+
                     for (int i = 0; i < etiqueta.length; i++) {
                         Etiqueta et = EtiquetaServices.getInstancia().findEtiquetaByName(etiqueta[i]);
                         if (et == null) {
@@ -254,7 +251,7 @@ public class Main {
 
             StringWriter writer = new StringWriter();
             try {
-            long id = Long.parseLong(request.params("id"));
+            String id = request.params("id");
             Post post = PostService.getInstancia().findH(id);
 
                 Template formTemplate = configuration.getTemplate("templates/verPost.ftl");
