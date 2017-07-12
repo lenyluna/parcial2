@@ -70,7 +70,14 @@ public class Main {
         Spark.get("/CrearPost/", (request, response) -> {
             StringWriter writer = new StringWriter();
             try {
-                Usuario user = UsuarioServices.getInstancia().find(request.session().attribute(SESSION_NAME));
+                Usuario user = null;
+                if(request.session().attribute(SESSION_NAME)!=null){
+                    user = UsuarioServices.getInstancia().find(request.session().attribute(SESSION_NAME));
+                }else {
+                    user= UsuarioServices.getInstancia().findAllByUser("anonimo");
+                    response.cookie(COOKIE_NAME,user.getUsername() , 3600);
+                    request.session().attribute(SESSION_NAME, user.getId());
+                }
                 Template formTemplate = configuration.getTemplate("templates/crearPost.ftl");
                 Map<String, Object> map = new HashMap<>();
                 if (user != null) {
@@ -78,9 +85,10 @@ public class Main {
                     map.put("login", "true");
                     map.put("tipoUser", user.getPrivilegio().name());
                 } else {
-                    map.put("username", "anoonymous");
-                    map.put("login", "false");
-                    map.put("tipoUser", "4");
+
+                    map.put("username", user.getUsername());
+                    map.put("login", "true");
+                    map.put("tipoUser", user.getPrivilegio().name());
                 }
                 formTemplate.process(map, writer);
 
@@ -105,8 +113,6 @@ public class Main {
 
             /*    if (etiqueta.length != 0) {
                 /*if (etiqueta.length != 0) {
-
-
             /*    if (etiqueta.length != 0) {
 
                     for (int i = 0; i < etiqueta.length; i++) {
