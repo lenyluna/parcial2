@@ -102,10 +102,14 @@ public class Main {
                 System.out.println("ETIQUETAS COJOYO:" + etiquetas);
                 String etiqueta[] = etiquetas.split(",");
                 Set<Etiqueta> listEtiqueta = new HashSet<>();
+<<<<<<< Updated upstream
 
             /*    if (etiqueta.length != 0) {
                 /*if (etiqueta.length != 0) {
 
+=======
+            /*    if (etiqueta.length != 0) {
+>>>>>>> Stashed changes
                     for (int i = 0; i < etiqueta.length; i++) {
                         Etiqueta et = EtiquetaServices.getInstancia().findEtiquetaByName(etiqueta[i]);
                         if (et == null) {

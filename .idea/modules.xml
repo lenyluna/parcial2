@@ -3,8 +3,11 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/parcial2.iml" filepath="$PROJECT_DIR$/.idea/modules/parcial2.iml" />
+      <module fileurl="file://C:\Users\Leny96\Documents\Dc.Universidad\Semestre2.2017\Internet Avanzado\Parcial2\parcial2\.idea\modules\parcial2.iml" filepath="C:\Users\Leny96\Documents\Dc.Universidad\Semestre2.2017\Internet Avanzado\Parcial2\parcial2\.idea\modules\parcial2.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/parcial2_main.iml" filepath="$PROJECT_DIR$/.idea/modules/parcial2_main.iml" group="parcial2" />
+      <module fileurl="file://C:\Users\Leny96\Documents\Dc.Universidad\Semestre2.2017\Internet Avanzado\Parcial2\parcial2\.idea\modules\parcial2_main.iml" filepath="C:\Users\Leny96\Documents\Dc.Universidad\Semestre2.2017\Internet Avanzado\Parcial2\parcial2\.idea\modules\parcial2_main.iml" group="parcial2" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/parcial2_test.iml" filepath="$PROJECT_DIR$/.idea/modules/parcial2_test.iml" group="parcial2" />
+      <module fileurl="file://C:\Users\Leny96\Documents\Dc.Universidad\Semestre2.2017\Internet Avanzado\Parcial2\parcial2\.idea\modules\parcial2_test.iml" filepath="C:\Users\Leny96\Documents\Dc.Universidad\Semestre2.2017\Internet Avanzado\Parcial2\parcial2\.idea\modules\parcial2_test.iml" group="parcial2" />
     </modules>
   </component>
 </project>
