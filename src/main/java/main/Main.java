@@ -73,10 +73,6 @@ public class Main {
                 Usuario user = null;
                 if(request.session().attribute(SESSION_NAME)!=null){
                     user = UsuarioServices.getInstancia().find(request.session().attribute(SESSION_NAME));
-                }else {
-                    user= UsuarioServices.getInstancia().findAllByUser("anonimo");
-                    response.cookie(COOKIE_NAME,user.getUsername() , 3600);
-                    request.session().attribute(SESSION_NAME, user.getId());
                 }
                 Template formTemplate = configuration.getTemplate("templates/crearPost.ftl");
                 Map<String, Object> map = new HashMap<>();
@@ -85,10 +81,7 @@ public class Main {
                     map.put("login", "true");
                     map.put("tipoUser", user.getPrivilegio().name());
                 } else {
-
-                    map.put("username", user.getUsername());
-                    map.put("login", "true");
-                    map.put("tipoUser", user.getPrivilegio().name());
+                    map.put("login", "false");
                 }
                 formTemplate.process(map, writer);
 
@@ -102,14 +95,16 @@ public class Main {
 
         Spark.post("/CrearPost/guardando", "multipart/form-data", (request, response) -> {
             StringWriter writer = new StringWriter();
+            Usuario user = null;
             try {
-                Usuario user = UsuarioServices.getInstancia().find(request.session().attribute(SESSION_NAME));
-                String titulo = request.queryParams("titulo") != null ? request.queryParams("titulo") : "unknown";
-                String descripcion = request.queryParams("descripcion") != null ? request.queryParams("descripcion") : "unknown";
-                String etiquetas = request.queryParams("eti") != null ? request.queryParams("eti") : "unknown";
-                System.out.println("ETIQUETAS COJOYO:" + etiquetas);
-                String etiqueta[] = etiquetas.split(",");
-                Set<Etiqueta> listEtiqueta = new HashSet<>();
+                if(request.session().attribute(SESSION_NAME)!=null){
+                    user = UsuarioServices.getInstancia().find(request.session().attribute(SESSION_NAME));
+                }else {
+                    user = UsuarioServices.getInstancia().findAllByUser("anonimo");
+                    response.cookie(COOKIE_NAME, user.getUsername(), 3600);
+                    request.session().attribute(SESSION_NAME, user.getId());
+                }
+
 
             /*    if (etiqueta.length != 0) {
                 /*if (etiqueta.length != 0) {
@@ -146,9 +141,14 @@ public class Main {
                     System.out.println("Size: " + part.getSize());
                     System.out.println("Filename: " + part.get);
                 }*/
+                String titulo = request.raw().getParameter("titulo") != null ? request.raw().getParameter("titulo") : "unknown";
+                String descripcion = request.raw().getParameter("descripcion") != null ?  request.raw().getParameter("descripcion") : "unknown";
+                String etiquetas =  request.raw().getParameter("eti") != null ? request.raw().getParameter("eti") : "unknown";
+                String etiqueta[] = etiquetas.split(",");
+                Set<Etiqueta> listEtiqueta = new HashSet<>();
 
                 String fName = request.raw().getPart("img").getSubmittedFileName();
-                double fsize = request.raw().getPart("img").getSize();
+                double fsize = convertir(request.raw().getPart("img").getSize());
                 System.out.println("-----------------------------------");
                 System.out.println("Title: " + request.raw().getParameter("title"));
                 System.out.println("File: " + fName);
@@ -186,10 +186,10 @@ public class Main {
                 //----------------------------------------------------------
                 Date date = new Date();
                 SimpleDateFormat format = new SimpleDateFormat("dd MMM yyyy");
+
                 Post post = new Post(titulo, descripcion, "/yucaImagenes/" +fName, fsize, user, format.format(date), listEtiqueta);
                 String uuid = UUID.randomUUID().toString();
                 post.setHash(uuid);
-               // post.setImgsize(2.5);
                 PostService.getInstancia().crearEntidad(post);
                 response.redirect("/");
 
@@ -256,13 +256,12 @@ public class Main {
 
         Spark.get("/post/:id", (request, response) -> {
             checkCOOKIES(request);
-
-
             StringWriter writer = new StringWriter();
             try {
             String id = request.params("id");
             Post post = PostService.getInstancia().findH(id);
-
+                post.setViews(post.cantViews());
+                PostService.getInstancia().editar(post);
                 Template formTemplate = configuration.getTemplate("templates/verPost.ftl");
                 Map<String, Object> map = new HashMap<>();
                 map.put("post", post);
@@ -278,8 +277,6 @@ public class Main {
                 } else {
                     map.put("login", "false");
                 }
-                post.setViews(post.cantViews());
-                PostService.getInstancia().editar(post);
                 formTemplate.process(map, writer);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -494,5 +491,10 @@ public class Main {
                 EtiquetaServices.getInstancia().eliminar(et1.getId());
             }
         }
+    }
+
+    private static double convertir(long sizeB){
+     double cant =0;
+     return cant=sizeB*0.000001;
     }
 }
