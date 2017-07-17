@@ -10,7 +10,7 @@
 
                     <div class="form-group">
                         <label for="exampleInputEmail1">Titulo</label>
-                        <input type="text" required class="form-control" id="exampleInputEmail1" name="titulo">
+                        <input  type="text" name="titulo"  class="form-control" id="exampleInputEmail1" required/>
                     </div>
 
                     <div id="gallery"></div>
@@ -18,7 +18,7 @@
                     <div class="form-group">
                         <label for="exampleInputEmail1">Descripci&oacuten</label>
 
-                        <textarea class="form-control" required rows="3" name="descripcion"></textarea>
+                        <textarea  name="descripcion" class="form-control"  rows="3" required ></textarea>
                     </div>
 
                     <div class="form-group">
@@ -32,8 +32,6 @@
                         <input required type="file" id="fileinput" accept="image/*" name="img"/>
 
                     </div>
-
-
 
                     <br>
                     <div class="modal-footer">
