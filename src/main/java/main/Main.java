@@ -40,6 +40,14 @@ public class Main {
         configuration.setClassForTemplateLoading(Main.class, "/");
         loadDemo();
 
+        Spark.before("/mensaje/*",(request, response) -> {
+            Usuario user = UsuarioServices.getInstancia().find(request.session().attribute(SESSION_NAME));
+            if(user.getId() == 3){
+                System.out.println(user.getId() + "ESTE ES EL JODIDO ID!!!!");
+                response.redirect("/");
+            }
+        });
+
 
         Spark.get("/", (request, response) -> {
             checkCOOKIES(request);
@@ -226,6 +234,7 @@ public class Main {
             return writer;
         });
 
+
         Spark.get("/verpost/:id", (request, response) -> {
             checkCOOKIES(request);
             StringWriter writer = new StringWriter();
@@ -256,6 +265,42 @@ public class Main {
 
             return writer;
         });
+
+        Spark.get("/mensaje/:id", (request, response) -> {
+            checkCOOKIES(request);
+            StringWriter writer = new StringWriter();
+
+            try {
+                String id = request.params("id");
+             //   Post post = PostService.getInstancia().findH(id);
+            //    post.setViews(post.cantViews());
+            //    PostService.getInstancia().editar(post);
+                Template formTemplate = configuration.getTemplate("templates/mensajes.ftl");
+                Map<String, Object> map = new HashMap<>();
+            //    map.put("post", post);
+            //    map.put("link", post.genLink());
+            //    map.put("bw", post.anchoBanda());
+            //    map.put("listComent", post.getListaComentario());
+            //    map.put("accesada",post.getAccesada());
+                if (request.session().attribute(SESSION_NAME) != null) {
+                    Usuario user = UsuarioServices.getInstancia().find(request.session().attribute(SESSION_NAME));
+                    map.put("login", "true");
+                    map.put("username", user.getUsername());
+                    map.put("tipoUser", user.getPrivilegio().name());
+                } else {
+                    map.put("login", "false");
+                }
+                formTemplate.process(map, writer);
+            } catch (Exception e) {
+                e.printStackTrace();
+
+                response.redirect("/");
+            }
+
+
+            return writer;
+        });
+
 
         Spark.get("/post/:id", (request, response) -> {
             checkCOOKIES(request);
