@@ -193,6 +193,27 @@
 
 </div>
 
+<script>
+    function tick() {
+        var city_id = $(".feed-selected-city").attr('id');
+        $("#contenido_chat").html("<div class='feed-loading'>The feed is loading ...</div>");
+        var ajaxOpts = {
+            type: "get",
+            url: "/men_show/${emisor}/${receptor}",
+            dataType: 'html',
+            data: "&city=" + city_id,
+            success: function(data) {
+                $('#contenido_chat').html(data.data);
+            }
+        };
+        $.ajax(ajaxOpts);
+        setTimeout('tick()',10000);
+    }
+
+    $(document).ready(function() {
+        tick();
+    }
+</script>
 
 <script>
 

@@ -18,4 +18,14 @@ public class MensajeServices extends GestionDB<Mensaje> {
         }
         return instancia;
     }
+
+    public void cargarDemo(){
+
+        Mensaje mensa = new Mensaje("klk menol","zomgod","lenyluna","today");
+        Mensaje mensa2 = new Mensaje("todo bien de bien","lenyluna","zomgod","today");
+
+        crearEntidad(mensa);
+        crearEntidad(mensa2);
+
+    }
 }

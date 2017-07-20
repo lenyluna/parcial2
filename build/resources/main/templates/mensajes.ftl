@@ -180,35 +180,8 @@
 
             <div class="chat-container active" id='cont1'>
 
-                <div class="bubble">
-                    <p>mesnaje 1</p>
-                </div>
-                <br>
-                <span class="datestamp">May 20, 2017, 4:16 PM</span>
+                <div id="contenido_chat"></div>
 
-
-                <div class="bubble bubble-alt">
-                    <p>Mensaje 2</p>
-                </div>
-                <br>
-                <span class="datestamp  dt-alt">May 20, 2017, 4:17 PM</span>
-
-
-                <div class="bubble">
-                    <p>Mensaje 3 </p>
-                </div>
-
-                <div class="bubble">
-                    <p>Mensaje 4</p>
-                </div>
-                <br>
-                <span class="datestamp">May 20, 2017, 4:20 PM</span>
-
-                <div class="bubble bubble-alt">
-                    <p>Mensaje 5</p>
-                </div>
-                <br>
-                <span class="datestamp  dt-alt">May 20, 2017, 4:22 PM</span>
             </div>
 
 
@@ -220,6 +193,27 @@
 
 </div>
 
+<script>
+    function tick() {
+        var city_id = $(".feed-selected-city").attr('id');
+        $("#contenido_chat").html("<div class='feed-loading'>The feed is loading ...</div>");
+        var ajaxOpts = {
+            type: "get",
+            url: "/men_show/${emisor}/${receptor}",
+            dataType: 'html',
+            data: "&city=" + city_id,
+            success: function(data) {
+                $('#contenido_chat').html(data.data);
+            }
+        };
+        $.ajax(ajaxOpts);
+        setTimeout('tick()',10000);
+    }
+
+    $(document).ready(function() {
+        tick();
+    }
+</script>
 
 <script>
 

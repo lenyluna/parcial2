@@ -142,6 +142,17 @@ public class GestionDB<T> {
 
     }
 
+    public Usuario findAllChat(String emisor, String receptor){
+        EntityManager em = getEntityManager();
+        Query query = em.createQuery("select e from Mensaje e where e.emisor = :emisor and e.userDestino = :receptor or e.emisor = :receptor and e.userDestino = :emisor order by e.fecha desc ");
+        query.setParameter("emisor", emisor);
+        query.setParameter("receptor", receptor);
+        return (Usuario) query.getResultList();
+
+    }
+
+
+
     public Etiqueta findEtiquetaByName(String name){
         EntityManager em = getEntityManager();
         Query query = em.createQuery("select e from Etiqueta e where e.name like :name");

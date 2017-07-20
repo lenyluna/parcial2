@@ -266,26 +266,58 @@ public class Main {
             return writer;
         });
 
-        Spark.get("/mensaje/:id", (request, response) -> {
+        Spark.get("/mensaje/:emisor/:receptor", (request, response) -> {
             checkCOOKIES(request);
             StringWriter writer = new StringWriter();
 
             try {
-                String id = request.params("id");
+                String emisor = request.params("emisor");
+                String receptor = request.params("receptor");
              //   Post post = PostService.getInstancia().findH(id);
-            //    post.setViews(post.cantViews());
-            //    PostService.getInstancia().editar(post);
+
                 Template formTemplate = configuration.getTemplate("templates/mensajes.ftl");
                 Map<String, Object> map = new HashMap<>();
-            //    map.put("post", post);
-            //    map.put("link", post.genLink());
-            //    map.put("bw", post.anchoBanda());
-            //    map.put("listComent", post.getListaComentario());
-            //    map.put("accesada",post.getAccesada());
+               // map.put("listComent", MensajeServices.getInstancia().findAllChat(emisor,receptor));
                 if (request.session().attribute(SESSION_NAME) != null) {
                     Usuario user = UsuarioServices.getInstancia().find(request.session().attribute(SESSION_NAME));
                     map.put("login", "true");
                     map.put("username", user.getUsername());
+                    map.put("name", user.getName());
+                    map.put("tipoUser", user.getPrivilegio().name());
+                    map.put("emisor", emisor);
+                    map.put("receptor", receptor);
+
+                } else {
+                    map.put("login", "false");
+                }
+                formTemplate.process(map, writer);
+            } catch (Exception e) {
+                e.printStackTrace();
+
+                response.redirect("/");
+            }
+
+
+            return writer;
+        });
+
+        Spark.get("/men_show/:emisor/:receptor", (request, response) -> {
+            checkCOOKIES(request);
+            StringWriter writer = new StringWriter();
+
+            try {
+                String emisor = request.params("emisor");
+                String receptor = request.params("receptor");
+             //   Post post = PostService.getInstancia().findH(id);
+
+                Template formTemplate = configuration.getTemplate("templates/contenido_chat.ftl");
+                Map<String, Object> map = new HashMap<>();
+                map.put("listComent", MensajeServices.getInstancia().findAllChat(emisor,receptor));
+                if (request.session().attribute(SESSION_NAME) != null) {
+                    Usuario user = UsuarioServices.getInstancia().find(request.session().attribute(SESSION_NAME));
+                    map.put("login", "true");
+                    map.put("username", user.getUsername());
+                    map.put("name", user.getName());
                     map.put("tipoUser", user.getPrivilegio().name());
                 } else {
                     map.put("login", "false");
@@ -503,6 +535,9 @@ public class Main {
 
         if (PostService.getInstancia().findAll().size() == 0) {
             PostService.getInstancia().cargarDemo();
+        }
+        if (MensajeServices.getInstancia().findAll().size() == 0) {
+            MensajeServices.getInstancia().cargarDemo();
         }
 
     }

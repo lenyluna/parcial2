@@ -15,11 +15,11 @@ public class Mensaje implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private String contenido;
-    private Usuario emisor;
+    private String emisor;
     private String userDestino;
     private String fecha;
 
-    public Mensaje(long id, String contenido, Usuario emisor, String userDestino, String fecha) {
+    public Mensaje( String contenido, String emisor, String userDestino, String fecha) {
         this.id = id;
         this.contenido = contenido;
         this.emisor = emisor;
@@ -46,11 +46,11 @@ public class Mensaje implements Serializable {
         this.contenido = contenido;
     }
 
-    public Usuario getEmisor() {
+    public String getEmisor() {
         return emisor;
     }
 
-    public void setEmisor(Usuario emisor) {
+    public void setEmisor(String emisor) {
         this.emisor = emisor;
     }
 
