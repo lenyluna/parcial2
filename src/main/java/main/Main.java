@@ -286,7 +286,7 @@ public class Main {
                     map.put("tipoUser", user.getPrivilegio().name());
                     map.put("emisor", emisor);
                     map.put("receptor", receptor);
-
+                    System.out.println("tama;o"+MensajeServices.getInstancia().findAllChat("2",receptor).size());
                 } else {
                     map.put("login", "false");
                 }
@@ -312,13 +312,14 @@ public class Main {
 
                 Template formTemplate = configuration.getTemplate("templates/contenido_chat.ftl");
                 Map<String, Object> map = new HashMap<>();
-                map.put("listComent", MensajeServices.getInstancia().findAllChat(emisor,receptor));
                 if (request.session().attribute(SESSION_NAME) != null) {
                     Usuario user = UsuarioServices.getInstancia().find(request.session().attribute(SESSION_NAME));
                     map.put("login", "true");
                     map.put("username", user.getUsername());
                     map.put("name", user.getName());
                     map.put("tipoUser", user.getPrivilegio().name());
+                    map.put("listaMensajes",MensajeServices.getInstancia().findAllChat(""+user.getId(),receptor));
+                    System.out.println("tama;o"+MensajeServices.getInstancia().findAllChat(""+user.getId(),receptor).size());
                 } else {
                     map.put("login", "false");
                 }

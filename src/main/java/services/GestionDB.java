@@ -1,6 +1,7 @@
 package services;
 
 import logica.Etiqueta;
+import logica.Mensaje;
 import logica.Post;
 import logica.Usuario;
 
@@ -142,12 +143,12 @@ public class GestionDB<T> {
 
     }
 
-    public Usuario findAllChat(String emisor, String receptor){
+    public List<Mensaje> findAllChat(String emisor, String receptor){
         EntityManager em = getEntityManager();
-        Query query = em.createQuery("select e from Mensaje e where e.emisor = :emisor and e.userDestino = :receptor or e.emisor = :receptor and e.userDestino = :emisor order by e.fecha desc ");
-        query.setParameter("emisor", emisor);
-        query.setParameter("receptor", receptor);
-        return (Usuario) query.getResultList();
+        Query query = em.createQuery("select e from Mensaje e where e.emisor like :emisor and e.userDestino like :receptor or e.emisor like :receptor and e.userDestino like :emisor order by e.fecha desc");
+        query.setParameter("emisor", "%"+emisor+"%");
+        query.setParameter("receptor", "%"+receptor+"%");
+        return  query.getResultList();
 
     }
 

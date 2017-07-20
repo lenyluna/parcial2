@@ -8,7 +8,7 @@
             <div class="row">
                 <h3>${post.titulo}</h3>
                 <br>
-                <h4>by <a class="button"  <#if login=="true"> href="/mensaje/${post.user.username}/${username}" </#if> style="text-decoration:none">${post.user.username}</a> <span class="glyphicon glyphicon-time"></span> <a class="button" style="text-decoration:none">${post.fecha}</a></h4>
+                <h4>by <a class="button"  <#if login=="true"> href="/mensaje/${username}/${post.user.username}" </#if> style="text-decoration:none">${post.user.username}</a> <span class="glyphicon glyphicon-time"></span> <a class="button" style="text-decoration:none">${post.fecha}</a></h4>
                 <div style="width: 250px;">
                     <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-link"></i></span>
@@ -77,7 +77,7 @@
                 <div class="panel panel-info">
                     <div class="panel-heading">
                         <h5 class="panel-title">
-                <#if login=="true"> <a href="/mensaje/${post.user.username}/${username}">${comentario.autor.username}</a> </#if>
+                <#if login=="true"> <a href="/mensaje/${username}/${post.user.username}">${comentario.autor.username}</a> </#if>
 
                             <#if login=="true"><a href="/downVote/${comentario.id}" >
                                 <spam class="glyphicon glyphicon-triangle-bottom"></spam> <small>${comentario.downVote} votes</small></a>
