@@ -86,7 +86,7 @@
                         <!-- Button -->
                         <div class="col-md-offset-3 col-md-9">
                             <button id="btn-signup" type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-send"></span> Send</button>
-                            <button type="reset" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
+                            <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
                         </div>
                     </div>
                 </form>

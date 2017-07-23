@@ -6,6 +6,7 @@
                 <h4 class="modal-title" id="myModalLabell">Nuevo post</h4>
             </div>
             <div class="modal-body">
+                <#if modificar=="false">
                 <form action="/CrearPost/guardando" method="post" role="form" enctype="multipart/form-data">
 
                     <div class="form-group">
@@ -38,9 +39,42 @@
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                         <button type="submit" class="btn btn-primary  btn-lg">Publicar</button>
                     </div>
-
                 </form>
+            <#elseif modificar=="true">
+                <form action="/post/modificar/${id}/guardando" method="post" role="form">
 
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Titulo</label>
+                        <input  type="text" name="titulo"  class="form-control" id="exampleInputEmail1" value="${titulo}" required/>
+                    </div>
+
+                    <div id="gallery"></div>
+
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Descripci&oacuten</label>
+
+                        <textarea  name="descripcion" class="form-control"  rows="3" required >${descripcion}</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Etiquetas</label>
+                        <input type="text" name="eti" class="form-control" id="eti" value="${etiquetas}" disabled/>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Foto</label>
+                        <input required type="file" id="fileinput" accept="image/*" name="img" value="${url}" disabled />
+
+                    </div>
+
+                    <br>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary  btn-lg">Publicar</button>
+                    </div>
+                </form>
+            </#if>
 
             </div>
 

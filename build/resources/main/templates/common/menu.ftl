@@ -58,6 +58,7 @@
                                 <li><a href="/listUsuario/"><span class="glyphicon glyphicon-list-alt"></span> Lista de usuarios</a></li>
                                 <li class="divider"></li>
                             </#if>
+                            <li><a href="/perfil"><span class="glyphicon glyphicon-info-sign"></span> Mis informaciones</a></li>
                             <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span> Log Out</a></li>
                             <!--<li class="divider"></li>
                             <li><a href="#">Separated link</a></li>

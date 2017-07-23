@@ -41,7 +41,7 @@
 
                         <div class="col-sm-12 controls" align="center">
                             <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-send"></span> Sign Up  </button>
-                            <button type="reset" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
+                            <a href="/"> <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span> Cancel</button></a>
                         </div>
                     </div>
                 </form>
