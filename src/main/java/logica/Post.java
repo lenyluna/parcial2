@@ -148,7 +148,8 @@ public class Post implements Serializable {
 
     public Double anchoBanda(){
         double total=0;
-        return total= views*imgsize;
+        double cant = views + accesada;
+        return total= cant*imgsize;
     }
 
     public int cantViews(){

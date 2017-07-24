@@ -1,5 +1,6 @@
 package services;
 
+import javafx.geometry.Pos;
 import logica.Etiqueta;
 import logica.Mensaje;
 import logica.Post;
@@ -164,5 +165,12 @@ public class GestionDB<T> {
         query.setParameter("name", "%"+name+"%");
         return (Etiqueta) query.getSingleResult();
 
+    }
+
+    public List<Post> findPostByUser(long id){
+        EntityManager em = getEntityManager();
+        Query query = em.createQuery("select e from Post e where e.user.id like :id");
+        query.setParameter("id", id);
+        return query.getResultList();
     }
 }
