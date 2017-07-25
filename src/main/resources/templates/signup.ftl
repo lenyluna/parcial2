@@ -37,10 +37,10 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="password" class="col-md-3 control-label"><input type="button" onclick="getGeo()" value="Ubicacion"/></label>
-                        <div class="col-md-9">
-                        <input type="text" name="dir" disabled>
-                        </div>
+                        <label for="lastname" class="col-md-3 control-label">Ubicaci&oacuten</label>
+                        <button type="button" onclick="myUbicacion()"> Ubicaci&oacuten</button>
+                        <p id="ubicacion"></p>
+                        <input type="text" name="pais" id="pais" style="padding-right: 20px"/>
                     </div>
 
                     <div style="margin-top:10px" class="form-group">
@@ -57,7 +57,6 @@
     </div>
 </div>
 <script src="/js/geolocalizacion.js" type="text/javascript"></script>
-<script src="http://j.maxmind.com/app/geoip.js"></script>
-<script src="http://maps.google.com/maps/api/js?sensor=false"></script>
+
 </body>
 </html>

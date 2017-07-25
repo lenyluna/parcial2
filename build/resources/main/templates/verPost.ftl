@@ -60,12 +60,14 @@
             <div class="col-md-8 col-md-offset-2">
                 <div class="widget-area no-padding blank">
                     <div class="status-upload">
-                      <#if login=="true"> <form role="form" method="post" action="/verpost/${post.id}/comentario">
-                            <textarea name="comentario" placeholder="Comenta Algo!!!"></textarea>
-
-                            <button type="submit" class="btn btn-success green"><i class="fa fa-share"></i> Comentar</button>
+                        <div class="row">
+                      <#if login=="true">
+                          <form role="form" method="post" action="/verpost/${post.id}/comentario">
+                            <textarea name="comentario" placeholder="Comenta Algo!!!" rows="5" cols="105"></textarea>
+                            <div align="right"><button type="submit" class="btn btn-success green"  ><i class="fa fa-share"></i> Comentar</button></div>
                         </form>
                       </#if>
+                            </div>
                     </div>
                     <!-- Status Upload  -->
                 </div>

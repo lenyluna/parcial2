@@ -1,8 +1,13 @@
 package main;
 
+
 import SOAP.SOAPstart;
 import api.JsonTransformer;
 import api.recursos;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonReader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.Version;
@@ -15,6 +20,7 @@ import spark.Spark;
 import javax.annotation.Resource;
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.http.Part;
+import javax.swing.text.Document;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -353,7 +359,13 @@ public class Main {
                 String password = request.queryParams("password") != null ? request.queryParams("password") : "unknown";
                 String nombre = request.queryParams("name") != null ? request.queryParams("name") : "unknown";
                 String correo = request.queryParams("email") != null ? request.queryParams("email") : "unknown";
-                UsuarioServices.getInstancia().crearEntidad(new Usuario(nombre, username, password, correo, Typeline.Normal,""));
+                String pais = request.queryParams("pais");
+                if(pais==""){
+                    UsuarioServices.getInstancia().crearEntidad(new Usuario(nombre, username, password, correo, Typeline.Normal,""));
+                }else {
+                    UsuarioServices.getInstancia().crearEntidad(new Usuario(nombre, username, password, correo, Typeline.Normal,pais));
+                }
+
                 response.cookie(COOKIE_NAME, username, 3600);
                 List<Usuario> allUser = UsuarioServices.getInstancia().findAll();
                 request.session().attribute(SESSION_NAME, allUser.get(allUser.size() - 1).getId());
