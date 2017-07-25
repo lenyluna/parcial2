@@ -20,6 +20,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.file.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -34,6 +36,9 @@ import static spark.Spark.*;
 public class Main {
     private static final String COOKIE_NAME = "user_cookies";
     private static String SESSION_NAME = "id";
+    private static String veriMenj= "";
+    private static String mensj="";
+    private static String link="";
 
     public static recursos resource;
 
@@ -72,7 +77,15 @@ public class Main {
                 } else {
                     map.put("login", "false");
                 }
-                map.put("listPost", PostService.getInstancia().findAll());
+                map.put("mensaje",mensj);
+                map.put("veri",veriMenj);
+                map.put("link",link);
+                if(link!=""){
+                    map.put("creado","true");
+                }else {
+                    map.put("creado","false");
+                }
+                map.put("listPost", PostService.getInstancia().findALLPost(0));
                 formTemplate.process(map, writer);
             } catch (Exception e) {
                 System.out.println(e.toString());
@@ -263,7 +276,6 @@ public class Main {
                 Set<Etiqueta> listEtiqueta = new HashSet<>();
                 if (etiquetas.length() != 0) {
                     String etiqueta[] = etiquetas.split(",");
-                    System.out.println("wea asjjas");
                     for (int i = 0; i < etiqueta.length; i++) {
                         Etiqueta et = EtiquetaServices.getInstancia().findEtiquetaByName(etiqueta[i]);
                         if (et == null) {
@@ -278,14 +290,14 @@ public class Main {
                         EtiquetaServices.getInstancia().crearEntidad(et);
                     }
                 }
-                String fName = request.raw().getPart("img").getSubmittedFileName();
+                Calendar fecha = Calendar.getInstance();
+                int mes= fecha.get(Calendar.MONTH);
+                int dia= fecha.get(Calendar.DAY_OF_MONTH);
+                int ano= fecha.get(Calendar.YEAR);
+                int seg = fecha.get(Calendar.SECOND);
+                String fName = "post"+user.getName()+mes+dia+ano+seg+(int)Math.random()+".jpg";
                 double fsize = convertir(request.raw().getPart("img").getSize());
-                System.out.println("-----------------------------------");
-                System.out.println("Title: " + request.raw().getParameter("title"));
-                System.out.println("File: " + fName);
-
                 Part uploadedFile = request.raw().getPart("img");
-
                 File theDir = new File("src/main/resources/publico/yucaImagenes/");
 
 // if the directory does not exist, create it
@@ -312,20 +324,20 @@ public class Main {
                 multipartConfigElement = null;
                 parts = null;
                 uploadedFile = null;
-
-
-                //----------------------------------------------------------
-                Date date = new Date();
-                SimpleDateFormat format = new SimpleDateFormat("dd MMM yyyy");
-
-                Post post = new Post(titulo, descripcion, "/yucaImagenes/" + fName, fsize, user, format.format(date), listEtiqueta);
-                String uuid = UUID.randomUUID().toString();
-                post.setHash(uuid);
-                PostService.getInstancia().crearEntidad(post);
-                response.redirect("/");
-
+                    //----------------------------------------------------------
+                    Date date = new Date();
+                    SimpleDateFormat format = new SimpleDateFormat("dd MMM yyyy");
+                    Post post = new Post(titulo, descripcion, "/yucaImagenes/" + fName, fsize, user, format.format(date), listEtiqueta);
+                    String uuid = UUID.randomUUID().toString();
+                    post.setHash(uuid);
+                    PostService.getInstancia().crearEntidad(post);
+                    veriMenj = "ok";
+                    mensj = "La operaci&oacuten se realizo con existo..!!";
+                    link = uuid;
+                    response.redirect("/");
             } catch (Exception e) {
                 e.printStackTrace();
+                veriMenj= "error";
                 response.redirect("/");
             }
 
@@ -341,7 +353,7 @@ public class Main {
                 String password = request.queryParams("password") != null ? request.queryParams("password") : "unknown";
                 String nombre = request.queryParams("name") != null ? request.queryParams("name") : "unknown";
                 String correo = request.queryParams("email") != null ? request.queryParams("email") : "unknown";
-                UsuarioServices.getInstancia().crearEntidad(new Usuario(nombre, username, password, correo, Typeline.Normal));
+                UsuarioServices.getInstancia().crearEntidad(new Usuario(nombre, username, password, correo, Typeline.Normal,""));
                 response.cookie(COOKIE_NAME, username, 3600);
                 List<Usuario> allUser = UsuarioServices.getInstancia().findAll();
                 request.session().attribute(SESSION_NAME, allUser.get(allUser.size() - 1).getId());
@@ -384,6 +396,14 @@ public class Main {
                     }
                 } else {
                     map.put("login", "false");
+                }
+                map.put("mensaje",mensj);
+                map.put("veri",veriMenj);
+                map.put("link2",link);
+                if(link!=""){
+                    map.put("creado","true");
+                }else {
+                    map.put("creado","false");
                 }
                 formTemplate.process(map, writer);
             } catch (Exception e) {
@@ -529,6 +549,10 @@ public class Main {
                 } else {
                     map.put("login", "false");
                 }
+                map.put("mensaje",mensj);
+                map.put("veri",veriMenj);
+                map.put("link2",link);
+                map.put("creado","false");
                 formTemplate.process(map, writer);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -664,9 +688,10 @@ public class Main {
             return null;
         });
 
-        Spark.get("/eliminar/:id", (request, response) -> {
+        Spark.get("/eliminar/post/:id", (request, response) -> {
             long id = Long.parseLong(request.params("id"));
             Post post = PostService.getInstancia().find(id);
+            String backup= post.getTitulo();
             deleteComen(post);
             ArrayList<Etiqueta> arrayList = new ArrayList<>();
             for (Etiqueta et : post.getListaEtiqueta()) {
@@ -676,6 +701,8 @@ public class Main {
             post.getListaComentario().removeAll(post.getListaComentario());
             PostService.getInstancia().eliminar(id);
             veryDeleteEtique(arrayList);
+            veriMenj="ok";
+            mensj="El Post titulado: "+backup+" se elimin&oacute correctamente";
             response.redirect("/");
             return null;
         });
@@ -683,9 +710,18 @@ public class Main {
         Spark.get("/eliminar/:idPost/comentario/:id", (request, response) -> {
             long id = Long.parseLong(request.params("id"));
             long idPost = Long.parseLong(request.params("idPost"));
-            Comentario com = ComentarioService.getInstancia().find(id);
-            ComentarioService.getInstancia().eliminar(id);
-            response.redirect("/verpost/" + idPost + "/false");
+            try{
+                Comentario com = ComentarioService.getInstancia().find(id);
+                ComentarioService.getInstancia().eliminar(id);
+                veriMenj="ok";
+                mensj="El Comentario de: "+com.getAutor().getUsername()+"se elimin&oacute correctamente";
+                response.redirect("/verpost/" + idPost+"/false");
+            }catch (Exception e) {
+                veriMenj="error";
+                response.redirect("/");
+                e.printStackTrace();
+            }
+
             return null;
         });
 
@@ -754,19 +790,43 @@ public class Main {
                 response.redirect("/");
             }
             return writer;
-
-
         });
 
         Spark.post("/post/modificar/:id/guardando", (request, response) -> {
             long id = Long.parseLong(request.params("id"));
             String titulo = request.queryParams("titulo");
             String descripcion = request.queryParams("descripcion");
-            Post post = PostService.getInstancia().find(id);
-            post.setTitulo(titulo);
-            post.setDescripcion(descripcion);
-            PostService.getInstancia().editar(post);
-            response.redirect("/verpost/" + id + "/false");
+            try {
+                Post post = PostService.getInstancia().find(id);
+                post.setTitulo(titulo);
+                post.setDescripcion(descripcion);
+                PostService.getInstancia().editar(post);
+                veriMenj="ok";
+                mensj="El Post se ha modificado correctamente";
+                response.redirect("/verpost/" + id + "/false");
+            } catch (Exception e) {
+                e.printStackTrace();
+                veriMenj="error";
+                response.redirect("/");
+            }
+            return null;
+        });
+
+        Spark.get("/msjRemove/:where/:idPost",(request, response) -> {
+            String where = request.params("where");
+            long id = Long.parseLong(request.params("idPost"));
+            veriMenj="";
+            link="";
+            mensj="";
+            switch (where){
+                case "inicio":
+                    response.redirect("/");
+                    break;
+                case "verpost":
+                    response.redirect("/verpost/"+id+"/false");
+                    break;
+            }
+
             return null;
         });
     }
@@ -856,4 +916,5 @@ public class Main {
         }
         return etiquetas;
     }
+
 }

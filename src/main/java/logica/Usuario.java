@@ -18,13 +18,16 @@ public class Usuario implements Serializable {
     private String password;
     private String correo;
     private Typeline privilegio;
+    private String pais;
 
-    public Usuario(String name, String username, String password, String correo, Typeline privilegio) {
+
+    public Usuario(String name, String username, String password, String correo, Typeline privilegio, String pais) {
         this.name = name;
         this.username = username;
         this.password = password;
         this.correo = correo;
         this.privilegio = privilegio;
+        this.pais =pais;
 
     }
 
@@ -80,4 +83,11 @@ public class Usuario implements Serializable {
         this.privilegio = privilegio;
     }
 
+    public String getPais() {
+        return pais;
+    }
+
+    public void setPais(String pais) {
+        this.pais = pais;
+    }
 }

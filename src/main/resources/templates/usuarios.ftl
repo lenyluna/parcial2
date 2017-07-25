@@ -32,7 +32,7 @@
         <tbody>
 <#list listUser as usuario>
         <tr>
-            <#if usuario.privilegio!="AdministradorGeneral">
+            <#if usuario.privilegio!="AdministradorGeneral" && usuario.privilegio!="Anonimo" >
             <td>${usuario.name}</td>
             <td>${usuario.username}</td>
                 <td>${usuario.correo}</td>
