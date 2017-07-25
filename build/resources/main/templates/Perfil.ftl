@@ -36,9 +36,9 @@
                 </a>
                 </#list>
                 </div>
-                <p align="right">
+                <!--<p align="right">
                     <a href="#">Siguiente>></a>
-                </p>
+                </p>-->
             </div>
         </div>
     </div>

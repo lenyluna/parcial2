@@ -27,7 +27,7 @@
 
                     <div class="form-group">
                         <label>Etiquetas</label>
-                        <input type="text" name="eti" class="form-control" id="eti"/>
+                        <input type="text" name="eti" class="form-control" id="eti" placeholder="se debe dividir por ','"/>
                     </div>
 
 

@@ -1,8 +1,13 @@
 package main;
 
+
 import SOAP.SOAPstart;
 import api.JsonTransformer;
 import api.recursos;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonReader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.Version;
@@ -15,6 +20,7 @@ import spark.Spark;
 import javax.annotation.Resource;
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.http.Part;
+import javax.swing.text.Document;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
