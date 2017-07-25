@@ -3,7 +3,7 @@
 <#if veri=="ok">
 <div class="alert alert-success" align="center"> ${mensaje}  <#if creado=="true"><a href="/post/${link2}">Haz clic</a> para ir al Post </#if> <a href="/msjRemove/verpost/${post.id}"><span class="glyphicon glyphicon-remove"></span> </a></div>
 <#elseif mensaje=="error">
-<div class="alert alert-danger">Ha ocurrido un error realizando la operaci&oacute..!</div>
+<div class="alert alert-danger">Ha ocurrido un error realizando la operaci&oacute..! <a href="/msjRemove/verpost/${post.id}"><span class="glyphicon glyphicon-remove"></span> </a></div>
 </#if>
 <div class="container">
 

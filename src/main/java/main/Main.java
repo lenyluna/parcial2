@@ -53,6 +53,7 @@ public class Main {
 
 
         Spark.get("/", (request, response) -> {
+            System.out.println("tam;o"+file.length);
             checkCOOKIES(request);
             StringWriter writer = new StringWriter();
             try {
