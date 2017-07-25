@@ -37,7 +37,7 @@ public class contenido extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
 
     // Movies json url
-    private static final String inicio_url = "http://10.0.0.9:4567";
+    private static final String inicio_url = "http://192.168.43.247:4567";
     private static final String url = inicio_url + "/api/post/all";
     private ProgressDialog pDialog;
     private ArrayList<Post> postlist = new ArrayList<Post>();

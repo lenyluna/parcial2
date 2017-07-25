@@ -18,6 +18,7 @@
                 <h2><strong>${accesada}</strong></h2>
                 <p><small><span class="glyphicon glyphicon-link"></span> Accesados</small></p>
             </div>
+
         </div>
         <hr/>
         <h3><strong>Mis Posts<strong></h3>
@@ -46,5 +47,4 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
 
 <script src="/js/myJava.js" type="text/javascript"> </script>
-
 </html>

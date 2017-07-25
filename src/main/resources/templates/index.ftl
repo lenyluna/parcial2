@@ -6,10 +6,10 @@
 <div class="alert alert-danger" align="center">Ha ocurrido un error realizando la operaci&oacute..! <a href="/msjRemove/inicio/-1"><span class="glyphicon glyphicon-remove"></span> </a></div>
 </#if>
 <div class="container">
-    <div class="col-md-12 well">
+    <div class="col-md-12 well" style="background-color: #10244E">
         <div class="row">
         <#list listPost as post>
-               <a href="/verpost/${post.id}/true">
+               <a href="/verpost/${post.id}/true" style="padding: 10dpi">
                     <div class="col-md-2 well">
                        <h6>${post.titulo}</h6>
                        <img style="width: 150px; height: 150px;" src="${post.urlimagen}" />
