@@ -73,6 +73,7 @@
 
     <br>
 
+    <#if listComent?size!=0>
     <div class="col-md-8 col-md-offset-2 well">
 
         <div class="row ">
@@ -83,34 +84,53 @@
                 <div class="panel panel-info">
                     <div class="panel-heading">
                         <h5 class="panel-title">
-                <#if login=="true"> <a href="/mensaje/${username}/${post.user.username}">${comentario.autor.username}</a> </#if>
-
-                            <#if login=="true"><a href="/downVote/${comentario.id}" >
-                                <spam class="glyphicon glyphicon-triangle-bottom"></spam> <small>${comentario.downVote} votes</small></a>
-
-                            <a href="/upVote/${comentario.id}">
-                                <spam class="glyphicon glyphicon-triangle-top"></spam> <small>${comentario.upVote} votes</small></a>
+                            <#if login=="true"> <a href="/mensaje/${username}/${post.user.username}">${comentario.autor.username}</a> <#else> ${comentario.autor.username}</#if>
+                            <#assign x="false"/>
+                            <#assign y="false"/>
+                            <#if login=="true">
+                                <#list comentario.listLikes as like>
+                                    <#if like.user.username == "${username}" && like.opcion == "like">
+                                        <#assign x="true"/>
+                                    <#elseif like.user.username == "${username}" && like.opcion == "unlike">
+                                        <#assign y="true">
+                                    </#if>
+                                 </#list>
+                                <#if y=="false" && x=="false">
+                                    <a href="/downVote/${comentario.id}" >
+                                        <spam class="glyphicon glyphicon-triangle-bottom"></spam></a> <small>${comentario.downVote} votes</small>
+                                <#elseif y=="true" && x=="false">
+                                    <spam class="glyphicon glyphicon-triangle-bottom"></spam> <small style="color: #0000FF">${comentario.downVote} votes</small>
+                                <#elseif y=="false" && x == "true">
+                                    <spam class="glyphicon glyphicon-triangle-bottom"></spam> <small>${comentario.downVote} votes</small>
+                                </#if>
+                                <#if x=="false" && y=="false">
+                                    <a href="/upVote/${comentario.id}">
+                                        <spam class="glyphicon glyphicon-triangle-top"></spam></a> <small>${comentario.upVote} votes</small>
+                                <#elseif x=="true" && y=="false">
+                                    <spam class="glyphicon glyphicon-triangle-top"></spam></a>  <small style="color: #0000FF">${comentario.upVote} votes</small>
+                                <#elseif y=="true" && x == "false">
+                                    <spam class="glyphicon glyphicon-triangle-top"></spam></a>  <small>${comentario.upVote} votes</small>
+                                </#if>
                             <#else>
                                 <a  class="button" style="text-decoration:none">
                                     <spam class="glyphicon glyphicon-triangle-bottom"></spam> <small>${comentario.downVote} votes</small></a>
 
-                                    <a class="button" style="text-decoration:none">
-                                        <spam class="glyphicon glyphicon-triangle-top"></spam> <small>${comentario.upVote} votes</small></a>
+                                <a class="button" style="text-decoration:none">
+                                    <spam class="glyphicon glyphicon-triangle-top"></spam> <small>${comentario.upVote} votes</small></a>
                             </#if>
                             <spam class="glyphicon glyphicon-time"></spam> <small>${comentario.fecha}</small>
-                           <#if login=="true"><a href="/eliminar/${post.id}/comentario/${comentario.id}"> <spam class="glyphicon glyphicon-remove"></spam> </a></#if>
+                            <#if login=="true" && tipoUser=="AdministradorGeneral"><a href="/eliminar/${post.id}/comentario/${comentario.id}"> <spam class="glyphicon glyphicon-remove"></spam> </a></#if>
                         </h5>
                     </div>
                     <div class="panel-body">${comentario.contenido} </div>
                 </div>
             </div>
             </#list>
-
         </div>
 
     </div>
     <!-- /.container -->
-
+    </#if>
 </div>
 </body>
 </html>

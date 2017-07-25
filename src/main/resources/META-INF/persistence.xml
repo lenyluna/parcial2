@@ -10,6 +10,7 @@
         <class>logica.Mensaje</class>
         <class>logica.Etiqueta</class>
         <class>logica.Post</class>
+        <class>logica.Likes</class>
         <properties>
             <!--<property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:test" />-->
             <property name="javax.persistence.jdbc.url" value="jdbc:h2:tcp://localhost/~/parcial2" />

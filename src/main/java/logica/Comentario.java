@@ -2,6 +2,8 @@ package logica;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by Leny96 on 4/7/2017.
@@ -19,6 +21,8 @@ public class Comentario implements Serializable {
     private Post post;
     private int upVote;
     private int downVote;
+    @OneToMany(targetEntity = Likes.class, fetch = FetchType.EAGER)
+    private Set<Likes> listLikes;
 
     public Comentario(){
 
@@ -31,6 +35,7 @@ public class Comentario implements Serializable {
         this.post = post;
         this.upVote = 0;
         this.downVote=0;
+        this.listLikes = new HashSet<>();
     }
 
     public long getId() {
@@ -90,11 +95,31 @@ public class Comentario implements Serializable {
     }
 
     public int cantUpVote(){
-        int cant=upVote;
-        return cant+=1;
+        int cant=0;
+        for (Likes like: listLikes) {
+            if(like.getOpcion().name().equalsIgnoreCase("like")){
+                cant++;
+            }
+        }
+        return cant;
     }
     public int cantDownVote(){
-        int cant=downVote;
-        return cant+=1;
+        int cant=0;
+        for (Likes like: listLikes) {
+            if(like.getOpcion().name().equalsIgnoreCase("unlike")){
+                cant++;
+            }
+        }
+        return cant;
+    }
+    public void addLikes(Likes like){
+        listLikes.add(like);
+    }
+    public Set<Likes> getListLikes() {
+        return listLikes;
+    }
+
+    public void setListLikes(Set<Likes> listLikes) {
+        this.listLikes = listLikes;
     }
 }

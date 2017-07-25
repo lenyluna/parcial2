@@ -212,7 +212,7 @@
 
     $(document).ready(function() {
         tick();
-    }
+    });
 </script>
 
 <script>
