@@ -1,10 +1,4 @@
-<#list listaMensajes as mensaje>
 
-    <#if mensaje.emisor == username >
-        <p>YUCA PAPA</p>
-    </#if>
-
-</#list>
 
 <div class="bubble">
     <p>mesnaje 1</p>
