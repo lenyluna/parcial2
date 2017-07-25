@@ -146,9 +146,13 @@ public class GestionDB<T> {
 
     public List<Mensaje> findAllChat(String emisor, String receptor){
         EntityManager em = getEntityManager();
-        Query query = em.createQuery("select e from Mensaje e where e.emisor like :emisor and e.userDestino like :receptor or e.emisor like :receptor and e.userDestino like :emisor order by e.fecha desc");
-        query.setParameter("emisor", "%"+emisor+"%");
-        query.setParameter("receptor", "%"+receptor+"%");
+        String qkin = "select e from Mensaje e where e.emisor = :emisor and e.userDestino = :receptor or e.emisor = :receptor and e.userDestino = :emisor ";
+        Query query = em.createQuery(qkin);
+      //select * from MENSAJE where emisor='zomgod' and userdestino='lenyluna' or  emisor='lenyluna' and userdestino='zomgod'
+        query.setParameter("emisor", "'"+emisor+"'");
+        query.setParameter("receptor", "'"+receptor+"'");
+        System.out.println("la JODIDA QUERY DEL CARAJO: " + query.getFirstResult());
+
         return  query.getResultList();
 
     }

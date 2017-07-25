@@ -101,7 +101,6 @@ public class Main {
             return writer;
         });
 
-
         Spark.post("/CrearPost/guardando", "multipart/form-data", (request, response) -> {
             StringWriter writer = new StringWriter();
             Usuario user = null;
@@ -222,7 +221,6 @@ public class Main {
             return writer;
         });
 
-
         Spark.get("/verpost/:id", (request, response) -> {
             checkCOOKIES(request);
             StringWriter writer = new StringWriter();
@@ -279,7 +277,7 @@ public class Main {
                     map.put("tipoUser", user.getPrivilegio().name());
                     map.put("emisor", emisor);
                     map.put("receptor", receptor);
-                    System.out.println("tama;o"+MensajeServices.getInstancia().findAllChat("2",receptor).size());
+                   // System.out.println("tama;o"+MensajeServices.getInstancia().findAllChat("2",receptor).size());
                 } else {
                     map.put("login", "false");
                 }
@@ -312,7 +310,7 @@ public class Main {
                     map.put("name", user.getName());
                     map.put("tipoUser", user.getPrivilegio().name());
                     map.put("listaMensajes",MensajeServices.getInstancia().findAllChat(""+user.getId(),receptor));
-                    System.out.println("tama;o"+MensajeServices.getInstancia().findAllChat(""+user.getId(),receptor).size());
+                  //  System.out.println("tama;o"+MensajeServices.getInstancia().findAllChat(""+user.getId(),receptor).size());
                 } else {
                     map.put("login", "false");
                 }
@@ -323,6 +321,15 @@ public class Main {
                 response.redirect("/");
             }
 
+            /*
+            <#list listaMensajes as mensaje>
+
+    <#if mensaje.emisor == username >
+        <p>YUCA PAPA</p>
+    </#if>
+
+</#list>
+             */
 
             return writer;
         });
@@ -430,6 +437,7 @@ public class Main {
             response.redirect("/");
             return null;
         });
+
         Spark.get("/errorlogin/", (request, response) -> {
             StringWriter writer = new StringWriter();
             try {
@@ -443,6 +451,7 @@ public class Main {
             }
             return writer;
         });
+
         Spark.get("/signup/", (request, response) -> {
             StringWriter writer = new StringWriter();
             try {
@@ -502,6 +511,7 @@ public class Main {
             response.redirect("/verpost/" + com.getPost().getId());
             return null;
         });
+
         Spark.get("/downVote/:id", (request, response) -> {
             long id = Long.parseLong(request.params("id"));
             Comentario com = ComentarioService.getInstancia().find(id);

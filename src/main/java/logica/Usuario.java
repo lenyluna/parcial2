@@ -18,8 +18,6 @@ public class Usuario implements Serializable {
     private String password;
     private String correo;
     private Typeline privilegio;
-    @OneToMany(targetEntity = Mensaje.class,mappedBy = "emisor",fetch = FetchType.EAGER)
-    private Set<Mensaje> listaMensaje;
 
     public Usuario(String name, String username, String password, String correo, Typeline privilegio) {
         this.name = name;
@@ -27,7 +25,7 @@ public class Usuario implements Serializable {
         this.password = password;
         this.correo = correo;
         this.privilegio = privilegio;
-        this.listaMensaje = new HashSet<>();
+
     }
 
     public Usuario(){
@@ -82,11 +80,4 @@ public class Usuario implements Serializable {
         this.privilegio = privilegio;
     }
 
-    public Set<Mensaje> getListaMensaje() {
-        return listaMensaje;
-    }
-
-    public void setListaMensaje(Set<Mensaje> listaMensaje) {
-        this.listaMensaje = listaMensaje;
-    }
 }
