@@ -128,9 +128,9 @@ public class Main {
                 String descripcion = request.raw().getParameter("descripcion") != null ?  request.raw().getParameter("descripcion") : "unknown";
                 String etiquetas =  request.raw().getParameter("eti");
                 Set<Etiqueta> listEtiqueta = new HashSet<>();
-                 if(etiquetas.length()!=0){
+                if(etiquetas.length()!=0){
                     String etiqueta[] = etiquetas.split(",");
-                     System.out.println("wea asjjas");
+                    System.out.println("wea asjjas");
                     for (int i = 0; i < etiqueta.length; i++) {
                         Etiqueta et = EtiquetaServices.getInstancia().findEtiquetaByName(etiqueta[i]);
                         if (et == null) {
@@ -221,18 +221,21 @@ public class Main {
             return writer;
         });
 
-        Spark.get("/verpost/:id", (request, response) -> {
+        Spark.get("/verpost/:id/:countV", (request, response) -> {
             checkCOOKIES(request);
             StringWriter writer = new StringWriter();
             long id = Long.parseLong(request.params("id"));
+            String countV = request.params("countV");
             Post post = PostService.getInstancia().find(id);
             try {
                 Template formTemplate = configuration.getTemplate("templates/verPost.ftl");
                 Map<String, Object> map = new HashMap<>();
                 map.put("post", post);
                 map.put("link", post.genLink());
-                post.setViews(post.cantViews());
-                PostService.getInstancia().editar(post);
+                if(countV.equalsIgnoreCase("true")) {
+                    post.setViews(post.cantViews());
+                    PostService.getInstancia().editar(post);
+                }
                 map.put("bw", post.anchoBanda());
                 map.put("listComent", post.getListaComentario());
                 map.put("accesada",post.getAccesada());
@@ -264,11 +267,11 @@ public class Main {
             try {
                 String emisor = request.params("emisor");
                 String receptor = request.params("receptor");
-             //   Post post = PostService.getInstancia().findH(id);
+                //   Post post = PostService.getInstancia().findH(id);
 
                 Template formTemplate = configuration.getTemplate("templates/mensajes.ftl");
                 Map<String, Object> map = new HashMap<>();
-               // map.put("listComent", MensajeServices.getInstancia().findAllChat(emisor,receptor));
+                // map.put("listComent", MensajeServices.getInstancia().findAllChat(emisor,receptor));
                 if (request.session().attribute(SESSION_NAME) != null) {
                     Usuario user = UsuarioServices.getInstancia().find(request.session().attribute(SESSION_NAME));
                     map.put("login", "true");
@@ -277,7 +280,7 @@ public class Main {
                     map.put("tipoUser", user.getPrivilegio().name());
                     map.put("emisor", emisor);
                     map.put("receptor", receptor);
-                   // System.out.println("tama;o"+MensajeServices.getInstancia().findAllChat("2",receptor).size());
+                    // System.out.println("tama;o"+MensajeServices.getInstancia().findAllChat("2",receptor).size());
                 } else {
                     map.put("login", "false");
                 }
@@ -299,7 +302,7 @@ public class Main {
             try {
                 String emisor = request.params("emisor");
                 String receptor = request.params("receptor");
-             //   Post post = PostService.getInstancia().findH(id);
+                //   Post post = PostService.getInstancia().findH(id);
 
                 Template formTemplate = configuration.getTemplate("templates/contenido_chat.ftl");
                 Map<String, Object> map = new HashMap<>();
@@ -310,7 +313,7 @@ public class Main {
                     map.put("name", user.getName());
                     map.put("tipoUser", user.getPrivilegio().name());
                     map.put("listaMensajes",MensajeServices.getInstancia().findAllChat(""+user.getId(),receptor));
-                  //  System.out.println("tama;o"+MensajeServices.getInstancia().findAllChat(""+user.getId(),receptor).size());
+                    //  System.out.println("tama;o"+MensajeServices.getInstancia().findAllChat(""+user.getId(),receptor).size());
                 } else {
                     map.put("login", "false");
                 }
@@ -374,8 +377,8 @@ public class Main {
             checkCOOKIES(request);
             StringWriter writer = new StringWriter();
             try {
-            String id = request.params("id");
-            Post post = PostService.getInstancia().findH(id);
+                String id = request.params("id");
+                Post post = PostService.getInstancia().findH(id);
                 post.setAccesada(post.cantAcce());
                 PostService.getInstancia().editar(post);
                 Template formTemplate = configuration.getTemplate("templates/verPost.ftl");
@@ -420,7 +423,7 @@ public class Main {
                     response.cookie(COOKIE_NAME, username, 3600);
                     request.session().attribute(SESSION_NAME, result.get(0).getId());
                     if (Long.parseLong(request.params("ubicar")) != -1) {
-                        response.redirect("/verpost/" + Long.parseLong(request.params("ubicar")));
+                        response.redirect("/verpost/" + Long.parseLong(request.params("ubicar"))+"/false");
                     } else {
                         response.redirect("/");
                     }
@@ -498,26 +501,33 @@ public class Main {
                 ComentarioService.getInstancia().crearEntidad(com);
                 PostService.getInstancia().editar(post);
             }
-            response.redirect("/verpost/" + id);
+            response.redirect("/verpost/" + id+"/false");
             return null;
         });
 
         Spark.get("/upVote/:id", (request, response) -> {
             long id = Long.parseLong(request.params("id"));
             Comentario com = ComentarioService.getInstancia().find(id);
+            Usuario user = UsuarioServices.getInstancia().find(request.session().attribute(SESSION_NAME));
+            Likes like = new Likes(user,Typeline2.like);
+            LikesService.getInstancia().crearEntidad(like);
+            com.addLikes(like);
             com.setUpVote(com.cantUpVote());
-            System.out.println("que lo que" + com.getUpVote());
             ComentarioService.getInstancia().editar(com);
-            response.redirect("/verpost/" + com.getPost().getId());
+            response.redirect("/verpost/" + com.getPost().getId()+"/false");
             return null;
         });
 
         Spark.get("/downVote/:id", (request, response) -> {
             long id = Long.parseLong(request.params("id"));
             Comentario com = ComentarioService.getInstancia().find(id);
+            Usuario user = UsuarioServices.getInstancia().find(request.session().attribute(SESSION_NAME));
+            Likes like = new Likes(user,Typeline2.unlike);
+            LikesService.getInstancia().crearEntidad(like);
+            com.addLikes(like);
             com.setDownVote(com.cantDownVote());
             ComentarioService.getInstancia().editar(com);
-            response.redirect("/verpost/" + com.getPost().getId());
+            response.redirect("/verpost/" + com.getPost().getId()+"/false");
             return null;
         });
 
@@ -542,7 +552,7 @@ public class Main {
             long idPost = Long.parseLong(request.params("idPost"));
             Comentario com = ComentarioService.getInstancia().find(id);
             ComentarioService.getInstancia().eliminar(id);
-            response.redirect("/verpost/" + idPost);
+            response.redirect("/verpost/" + idPost+"/false");
             return null;
         });
 
@@ -623,7 +633,7 @@ public class Main {
             post.setTitulo(titulo);
             post.setDescripcion(descripcion);
             PostService.getInstancia().editar(post);
-            response.redirect("/");
+            response.redirect("/verpost/"+id+"/false");
             return null;
         });
     }
@@ -680,8 +690,8 @@ public class Main {
     }
 
     private static double convertir(long sizeB){
-     double cant =0;
-     return cant=sizeB*0.000001;
+        double cant =0;
+        return cant=sizeB*0.000001;
     }
     private static int cantViewByUser(List<Post> listPost){
         int cant=0;
