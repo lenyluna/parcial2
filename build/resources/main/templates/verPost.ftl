@@ -63,7 +63,7 @@
                         <div class="row">
                       <#if login=="true">
                           <form role="form" method="post" action="/verpost/${post.id}/comentario">
-                            <textarea name="comentario" placeholder="Comenta Algo!!!" rows="5" cols="105" style="padding-right: 5px"></textarea>
+                            <textarea name="comentario" placeholder="Comenta Algo!!!" rows="5" cols="105"></textarea>
                             <div align="right"><button type="submit" class="btn btn-success green"  ><i class="fa fa-share"></i> Comentar</button></div>
                         </form>
                       </#if>
