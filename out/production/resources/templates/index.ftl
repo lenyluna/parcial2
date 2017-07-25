@@ -6,8 +6,8 @@
     <div class="col-md-12 well">
         <div class="row">
         <#list listPost as post>
-                <a href="/verpost/${post.id}">
-                        <div class="col-md-2 well">
+                <a href="/verpost/${post.id}/true">
+                    <div class="col-md-2 well">
                        <h6>${post.titulo}</h6>
                        <img src="${post.urlimagen}" style="width: 150px; height: 150px;"/>
                        <hr>

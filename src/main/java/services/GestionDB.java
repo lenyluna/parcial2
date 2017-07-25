@@ -1,5 +1,6 @@
 package services;
 
+import api.PostFilter;
 import javafx.geometry.Pos;
 import logica.Etiqueta;
 import logica.Mensaje;
@@ -9,6 +10,7 @@ import logica.Usuario;
 import javax.persistence.*;
 import javax.persistence.criteria.CriteriaQuery;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -144,6 +146,57 @@ public class GestionDB<T> {
 
     }
 
+    public ArrayList<PostFilter> findallapi(){
+        EntityManager em = getEntityManager();
+        Query query = em.createQuery("select e from Post e");
+        ArrayList<PostFilter> filtrado = new ArrayList<>();
+
+        ArrayList<Post> lista = (ArrayList<Post>) query.getResultList();
+
+        for (Post individual: lista) {
+            filtrado.add(new PostFilter(individual.getId(),
+                                        individual.getTitulo(),
+                                        individual.getDescripcion(),
+                                        individual.getUrlimagen(),
+                                        individual.getHash(),
+                                        individual.getAccesada(),
+                                        individual.cantViews(),
+                                        individual.getFecha(),
+                                        individual.getUser().getUsername()));
+
+        }
+
+        return filtrado;
+
+    }
+
+    public ArrayList<PostFilter> findPostsByUsername(String username){
+        Usuario userito = findAllByUser(username);
+        EntityManager em = getEntityManager();
+        Query query = em.createQuery("select e from Post e where e.user.id = :username");
+        query.setParameter("username", userito.getId());
+        ArrayList<PostFilter> filtrado = new ArrayList<>();
+
+        ArrayList<Post> lista = (ArrayList<Post>) query.getResultList();
+        for (Post individual: lista) {
+
+            if(individual.getUser().getUsername().equals(username)) {
+
+                filtrado.add(new PostFilter(individual.getId(),
+                        individual.getTitulo(),
+                        individual.getDescripcion(),
+                        individual.getUrlimagen(),
+                        individual.getHash(),
+                        individual.getAccesada(),
+                        individual.cantViews(),
+                        individual.getFecha(),
+                        individual.getUser().getUsername()));
+            }
+        }
+
+        return filtrado;
+    }
+
     public List<Mensaje> findAllChat(String emisor, String receptor){
         EntityManager em = getEntityManager();
         String qkin = "select e from Mensaje e where e.emisor = :emisor and e.userDestino = :receptor or e.emisor = :receptor and e.userDestino = :emisor ";
@@ -169,7 +222,7 @@ public class GestionDB<T> {
 
     public List<Post> findPostByUser(long id){
         EntityManager em = getEntityManager();
-        Query query = em.createQuery("select e from Post e where e.user.id like :id");
+        Query query = em.createQuery("select e from Post e where e.user.id = :id");
         query.setParameter("id", id);
         return query.getResultList();
     }

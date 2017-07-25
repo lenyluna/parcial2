@@ -3,7 +3,11 @@
 
 <div class="container">
             <div class="modal-header">
-                <h4 class="modal-title" id="myModalLabell">Nuevo post</h4>
+                <#if modificar=="false">
+                    <h4 class="modal-title" id="myModalLabell">Nuevo post</h4>
+                <#elseif modificar=="true">
+                    <h4 class="modal-title" id="myModalLabell">Modificar post</h4>
+                </#if>
             </div>
             <div class="modal-body">
                 <#if modificar=="false">
@@ -48,8 +52,6 @@
                         <input  type="text" name="titulo"  class="form-control" id="exampleInputEmail1" value="${titulo}" required/>
                     </div>
 
-                    <div id="gallery"></div>
-
                     <div class="form-group">
                         <label for="exampleInputEmail1">Descripci&oacuten</label>
 
@@ -57,21 +59,18 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="exampleInputEmail1">Foto</label>
+                        <img  src="${url}"/>
+                    </div>
+
+                    <div class="form-group">
                         <label>Etiquetas</label>
                         <input type="text" name="eti" class="form-control" id="eti" value="${etiquetas}" disabled/>
                     </div>
-
-
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">Foto</label>
-                        <input required type="file" id="fileinput" accept="image/*" name="img" value="${url}" disabled />
-
-                    </div>
-
                     <br>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-primary  btn-lg">Publicar</button>
+                        <button type="submit" class="btn btn-primary  btn-lg">Guardar</button>
                     </div>
                 </form>
             </#if>
@@ -79,7 +78,6 @@
             </div>
 
         </div>
-
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
 

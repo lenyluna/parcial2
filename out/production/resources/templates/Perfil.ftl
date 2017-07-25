@@ -26,7 +26,7 @@
                 <div class="row">
                 <#list listPost as post>
                 <a href="/verpost/${post.id}">
-                    <div class="col-md-2 well">
+                    <div class="col-md-2 well" style="width: auto; height: auto;">
                         <h6>${post.titulo}</h6>
                         <img src="${post.urlimagen}" style="width: 150px; height: 150px;"/>
                         <hr>

@@ -1,5 +1,8 @@
 package main;
 
+import SOAP.SOAPstart;
+import api.JsonTransformer;
+import api.recursos;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.Version;
@@ -9,6 +12,7 @@ import services.*;
 import spark.Request;
 import spark.Spark;
 
+import javax.annotation.Resource;
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.http.Part;
 import java.awt.*;
@@ -22,9 +26,7 @@ import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static spark.Spark.halt;
-import static spark.Spark.redirect;
-import static spark.Spark.staticFileLocation;
+import static spark.Spark.*;
 
 /**
  * Created by Leny96 on 5/7/2017.
@@ -33,16 +35,22 @@ public class Main {
     private static final String COOKIE_NAME = "user_cookies";
     private static String SESSION_NAME = "id";
 
-    public static void main(String[] args) {
+    public static recursos resource;
+
+
+    public static void main(String[] args) throws Exception {
         ConfigDB.getInstancia().startDb();
         staticFileLocation("/publico");
         final Configuration configuration = new Configuration(new Version(2, 3, 0));
         configuration.setClassForTemplateLoading(Main.class, "/");
         loadDemo();
+        JsonTransformer jsonTransformer = new JsonTransformer();
+        SOAPstart.init();
 
-        Spark.before("/mensaje/*",(request, response) -> {
+
+        Spark.before("/mensaje/*", (request, response) -> {
             Usuario user = UsuarioServices.getInstancia().find(request.session().attribute(SESSION_NAME));
-            if(user.getId() == 3){
+            if (user.getId() == 3) {
                 System.out.println(user.getId() + "ESTE ES EL JODIDO ID!!!!");
                 response.redirect("/");
             }
@@ -75,11 +83,136 @@ public class Main {
             return writer;
         });
 
+        path("/api", () -> {
+            before("/*", (q, a) -> System.out.println("ENTRANDO AL API"));
+            path("/post", () -> {
+                get("/all", (request, response) -> {
+                    try {
+                        return PostService.getInstancia().findallapi();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        return null;
+                    }
+                }, jsonTransformer);
+                get("/:nombre", (request, response) -> {
+                    Object writer = new Object();
+
+                    try {
+                        writer = PostService.getInstancia().findPostsByUsername(request.params("nombre"));
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return writer;
+                }, jsonTransformer);
+                post("/new", "multipart/form-data", (request, response) -> {
+                    StringWriter writer = new StringWriter();
+                    Usuario user = null;
+                    try {
+                        if (request.session().attribute(SESSION_NAME) != null) {
+                            user = UsuarioServices.getInstancia().find(request.session().attribute(SESSION_NAME));
+                        } else {
+                            user = UsuarioServices.getInstancia().findAllByUser("anonimo");
+                            response.cookie(COOKIE_NAME, user.getUsername(), 3600);
+                            request.session().attribute(SESSION_NAME, user.getId());
+                        }
+                        String location = "image";          // the directory location where files will be stored
+                        long maxFileSize = 100000000;       // the maximum size allowed for uploaded files
+                        long maxRequestSize = 100000000;    // the maximum size allowed for multipart/form-data requests
+                        int fileSizeThreshold = 1024;       // the size threshold after which files will be written to disk
+
+                        MultipartConfigElement multipartConfigElement = new MultipartConfigElement(
+                                location, maxFileSize, maxRequestSize, fileSizeThreshold);
+                        request.raw().setAttribute("org.eclipse.jetty.multipartConfig",
+                                multipartConfigElement);
+
+                        Collection<Part> parts = request.raw().getParts();
+                        String titulo = request.raw().getParameter("titulo") != null ? request.raw().getParameter("titulo") : "unknown";
+                        String descripcion = request.raw().getParameter("descripcion") != null ? request.raw().getParameter("descripcion") : "unknown";
+                        String etiquetas = request.raw().getParameter("eti");
+                        Set<Etiqueta> listEtiqueta = new HashSet<>();
+                        if (etiquetas.length() != 0) {
+                            String etiqueta[] = etiquetas.split(",");
+                            System.out.println("wea asjjas");
+                            for (int i = 0; i < etiqueta.length; i++) {
+                                Etiqueta et = EtiquetaServices.getInstancia().findEtiquetaByName(etiqueta[i]);
+                                if (et == null) {
+                                    Etiqueta et2 = new Etiqueta(etiqueta[i]);
+                                    EtiquetaServices.getInstancia().crearEntidad(et2);
+                                    listEtiqueta.add(et2);
+                                } else {
+                                    listEtiqueta.add(et);
+                                }
+                            }
+                            for (Etiqueta et : listEtiqueta) {
+                                EtiquetaServices.getInstancia().crearEntidad(et);
+                            }
+                        }
+                        String fName = request.raw().getPart("img").getSubmittedFileName();
+                        double fsize = convertir(request.raw().getPart("img").getSize());
+                        System.out.println("-----------------------------------");
+                        System.out.println("Title: " + request.raw().getParameter("title"));
+                        System.out.println("File: " + fName);
+
+                        Part uploadedFile = request.raw().getPart("img");
+
+                        File theDir = new File("src/main/resources/publico/yucaImagenes/");
+
+// if the directory does not exist, create it
+                        if (!theDir.exists()) {
+                            System.out.println("creating directory: " + theDir.getName());
+                            boolean result = false;
+
+                            try {
+                                theDir.mkdir();
+                                result = true;
+                            } catch (SecurityException se) {
+                                //handle it
+                            }
+                            if (result) {
+                                System.out.println("DIR created again");
+                            }
+                        }
+                        Path out = Paths.get(theDir + "/" + fName);
+                        try (final InputStream in = uploadedFile.getInputStream()) {
+                            Files.copy(in, out);
+                            uploadedFile.delete();
+                        }
+                        // cleanup
+                        multipartConfigElement = null;
+                        parts = null;
+                        uploadedFile = null;
+
+
+                        //----------------------------------------------------------
+                        Date date = new Date();
+                        SimpleDateFormat format = new SimpleDateFormat("dd MMM yyyy");
+
+                        Post post = new Post(titulo, descripcion, "/yucaImagenes/" + fName, fsize, user, format.format(date), listEtiqueta);
+                        String uuid = UUID.randomUUID().toString();
+                        post.setHash(uuid);
+                        PostService.getInstancia().crearEntidad(post);
+                        response.redirect("OK");
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        response.redirect("Error");
+                    }
+
+                    return null;
+
+
+                });
+
+            });
+
+        });
+
         Spark.get("/CrearPost/", (request, response) -> {
             StringWriter writer = new StringWriter();
             try {
                 Usuario user = null;
-                if(request.session().attribute(SESSION_NAME)!=null){
+                if (request.session().attribute(SESSION_NAME) != null) {
                     user = UsuarioServices.getInstancia().find(request.session().attribute(SESSION_NAME));
                 }
                 Template formTemplate = configuration.getTemplate("templates/crearPost.ftl");
@@ -91,7 +224,7 @@ public class Main {
                 } else {
                     map.put("login", "false");
                 }
-                map.put("modificar","false");
+                map.put("modificar", "false");
                 formTemplate.process(map, writer);
 
             } catch (Exception e) {
@@ -105,9 +238,9 @@ public class Main {
             StringWriter writer = new StringWriter();
             Usuario user = null;
             try {
-                if(request.session().attribute(SESSION_NAME)!=null){
+                if (request.session().attribute(SESSION_NAME) != null) {
                     user = UsuarioServices.getInstancia().find(request.session().attribute(SESSION_NAME));
-                }else {
+                } else {
                     user = UsuarioServices.getInstancia().findAllByUser("anonimo");
                     response.cookie(COOKIE_NAME, user.getUsername(), 3600);
                     request.session().attribute(SESSION_NAME, user.getId());
@@ -125,10 +258,10 @@ public class Main {
 
                 Collection<Part> parts = request.raw().getParts();
                 String titulo = request.raw().getParameter("titulo") != null ? request.raw().getParameter("titulo") : "unknown";
-                String descripcion = request.raw().getParameter("descripcion") != null ?  request.raw().getParameter("descripcion") : "unknown";
-                String etiquetas =  request.raw().getParameter("eti");
+                String descripcion = request.raw().getParameter("descripcion") != null ? request.raw().getParameter("descripcion") : "unknown";
+                String etiquetas = request.raw().getParameter("eti");
                 Set<Etiqueta> listEtiqueta = new HashSet<>();
-                if(etiquetas.length()!=0){
+                if (etiquetas.length() != 0) {
                     String etiqueta[] = etiquetas.split(",");
                     System.out.println("wea asjjas");
                     for (int i = 0; i < etiqueta.length; i++) {
@@ -170,7 +303,7 @@ public class Main {
                         System.out.println("DIR created");
                     }
                 }
-                Path out = Paths.get(theDir+ "/" + fName);
+                Path out = Paths.get(theDir + "/" + fName);
                 try (final InputStream in = uploadedFile.getInputStream()) {
                     Files.copy(in, out);
                     uploadedFile.delete();
@@ -185,7 +318,7 @@ public class Main {
                 Date date = new Date();
                 SimpleDateFormat format = new SimpleDateFormat("dd MMM yyyy");
 
-                Post post = new Post(titulo, descripcion, "/yucaImagenes/" +fName, fsize, user, format.format(date), listEtiqueta);
+                Post post = new Post(titulo, descripcion, "/yucaImagenes/" + fName, fsize, user, format.format(date), listEtiqueta);
                 String uuid = UUID.randomUUID().toString();
                 post.setHash(uuid);
                 PostService.getInstancia().crearEntidad(post);
@@ -232,22 +365,22 @@ public class Main {
                 Map<String, Object> map = new HashMap<>();
                 map.put("post", post);
                 map.put("link", post.genLink());
-                if(countV.equalsIgnoreCase("true")) {
+                if (countV.equalsIgnoreCase("true")) {
                     post.setViews(post.cantViews());
                     PostService.getInstancia().editar(post);
                 }
                 map.put("bw", post.anchoBanda());
                 map.put("listComent", post.getListaComentario());
-                map.put("accesada",post.getAccesada());
+                map.put("accesada", post.getAccesada());
                 if (request.session().attribute(SESSION_NAME) != null) {
                     Usuario user = UsuarioServices.getInstancia().find(request.session().attribute(SESSION_NAME));
                     map.put("login", "true");
                     map.put("username", user.getUsername());
                     map.put("tipoUser", user.getPrivilegio().name());
-                    if(post.getUser()==user){
-                        map.put("modificar","true");
-                    }else{
-                        map.put("modificar","false");
+                    if (post.getUser() == user) {
+                        map.put("modificar", "true");
+                    } else {
+                        map.put("modificar", "false");
                     }
                 } else {
                     map.put("login", "false");
@@ -312,7 +445,7 @@ public class Main {
                     map.put("username", user.getUsername());
                     map.put("name", user.getName());
                     map.put("tipoUser", user.getPrivilegio().name());
-                    map.put("listaMensajes",MensajeServices.getInstancia().findAllChat(""+user.getId(),receptor));
+                    map.put("listaMensajes", MensajeServices.getInstancia().findAllChat("" + user.getId(), receptor));
                     //  System.out.println("tama;o"+MensajeServices.getInstancia().findAllChat(""+user.getId(),receptor).size());
                 } else {
                     map.put("login", "false");
@@ -337,18 +470,18 @@ public class Main {
             return writer;
         });
 
-        Spark.get("/postByEtiqueta/:id/",(request,response)-> {
+        Spark.get("/postByEtiqueta/:id/", (request, response) -> {
             long id = Long.parseLong(request.params("id"));
             StringWriter writer = new StringWriter();
             Usuario user = null;
-            if(request.session().attribute(SESSION_NAME)!=null){
+            if (request.session().attribute(SESSION_NAME) != null) {
                 user = UsuarioServices.getInstancia().find(request.session().attribute(SESSION_NAME));
             }
             ArrayList<Post> listPost = new ArrayList<Post>();
             List<Post> list = PostService.getInstancia().findAll();
-            for (Post post: list) {
-                for (Etiqueta eti: post.getListaEtiqueta()) {
-                    if(eti.getId()== id){
+            for (Post post : list) {
+                for (Etiqueta eti : post.getListaEtiqueta()) {
+                    if (eti.getId() == id) {
                         listPost.add(post);
                     }
                 }
@@ -363,10 +496,10 @@ public class Main {
                 } else {
                     map.put("login", "false");
                 }
-                map.put("etiqueta",EtiquetaServices.getInstancia().find(id).getName());
-                map.put("listPost",listPost);
+                map.put("etiqueta", EtiquetaServices.getInstancia().find(id).getName());
+                map.put("listPost", listPost);
                 formTemplate.process(map, writer);
-            }catch (Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 response.redirect("/");
             }
@@ -387,7 +520,7 @@ public class Main {
                 map.put("link", post.genLink());
                 map.put("bw", post.anchoBanda());
                 map.put("listComent", post.getListaComentario());
-                map.put("accesada",post.getAccesada());
+                map.put("accesada", post.getAccesada());
                 if (request.session().attribute(SESSION_NAME) != null) {
                     Usuario user = UsuarioServices.getInstancia().find(request.session().attribute(SESSION_NAME));
                     map.put("login", "true");
@@ -423,7 +556,7 @@ public class Main {
                     response.cookie(COOKIE_NAME, username, 3600);
                     request.session().attribute(SESSION_NAME, result.get(0).getId());
                     if (Long.parseLong(request.params("ubicar")) != -1) {
-                        response.redirect("/verpost/" + Long.parseLong(request.params("ubicar"))+"/false");
+                        response.redirect("/verpost/" + Long.parseLong(request.params("ubicar")) + "/false");
                     } else {
                         response.redirect("/");
                     }
@@ -478,7 +611,7 @@ public class Main {
                 map.put("login", "true");
                 map.put("username", user.getUsername());
                 map.put("tipoUser", user.getPrivilegio().name());
-                map.put("listUser",UsuarioServices.getInstancia().findAll());
+                map.put("listUser", UsuarioServices.getInstancia().findAll());
                 formTemplate.process(map, writer);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -501,7 +634,7 @@ public class Main {
                 ComentarioService.getInstancia().crearEntidad(com);
                 PostService.getInstancia().editar(post);
             }
-            response.redirect("/verpost/" + id+"/false");
+            response.redirect("/verpost/" + id + "/false");
             return null;
         });
 
@@ -509,12 +642,12 @@ public class Main {
             long id = Long.parseLong(request.params("id"));
             Comentario com = ComentarioService.getInstancia().find(id);
             Usuario user = UsuarioServices.getInstancia().find(request.session().attribute(SESSION_NAME));
-            Likes like = new Likes(user,Typeline2.like);
+            Likes like = new Likes(user, Typeline2.like);
             LikesService.getInstancia().crearEntidad(like);
             com.addLikes(like);
             com.setUpVote(com.cantUpVote());
             ComentarioService.getInstancia().editar(com);
-            response.redirect("/verpost/" + com.getPost().getId()+"/false");
+            response.redirect("/verpost/" + com.getPost().getId() + "/false");
             return null;
         });
 
@@ -522,12 +655,12 @@ public class Main {
             long id = Long.parseLong(request.params("id"));
             Comentario com = ComentarioService.getInstancia().find(id);
             Usuario user = UsuarioServices.getInstancia().find(request.session().attribute(SESSION_NAME));
-            Likes like = new Likes(user,Typeline2.unlike);
+            Likes like = new Likes(user, Typeline2.unlike);
             LikesService.getInstancia().crearEntidad(like);
             com.addLikes(like);
             com.setDownVote(com.cantDownVote());
             ComentarioService.getInstancia().editar(com);
-            response.redirect("/verpost/" + com.getPost().getId()+"/false");
+            response.redirect("/verpost/" + com.getPost().getId() + "/false");
             return null;
         });
 
@@ -552,7 +685,7 @@ public class Main {
             long idPost = Long.parseLong(request.params("idPost"));
             Comentario com = ComentarioService.getInstancia().find(id);
             ComentarioService.getInstancia().eliminar(id);
-            response.redirect("/verpost/" + idPost+"/false");
+            response.redirect("/verpost/" + idPost + "/false");
             return null;
         });
 
@@ -577,31 +710,31 @@ public class Main {
             Usuario user = UsuarioServices.getInstancia().find(request.session().attribute(SESSION_NAME));
             try {
                 Template formTemplate = configuration.getTemplate("templates/Perfil.ftl");
-                List<Post> listPost= PostService.getInstancia().findPostByUser(user.getId());
+                List<Post> listPost = PostService.getInstancia().findPostByUser(user.getId());
                 Map<String, Object> map = new HashMap<>();
                 map.put("login", "true");
-                map.put("username",user.getUsername());
-                map.put("tipoUser",user.getPrivilegio().name());
-                map.put("user",user);
-                map.put("cantArticulo",listPost.size());
-                map.put("views",cantViewByUser(listPost));
-                map.put("accesada",cantAccesadaByUser(listPost));
-                map.put("listPost",listPost);
+                map.put("username", user.getUsername());
+                map.put("tipoUser", user.getPrivilegio().name());
+                map.put("user", user);
+                map.put("cantArticulo", listPost.size());
+                map.put("views", cantViewByUser(listPost));
+                map.put("accesada", cantAccesadaByUser(listPost));
+                map.put("listPost", listPost);
                 formTemplate.process(map, writer);
-            }catch(Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 response.redirect("/");
             }
             return writer;
         });
 
-        Spark.get("/post/modificar/:id",(request,response) ->{
+        Spark.get("/post/modificar/:id", (request, response) -> {
             StringWriter writer = new StringWriter();
             long id = Long.parseLong(request.params("id"));
             Post post = PostService.getInstancia().find(id);
             try {
                 Usuario user = null;
-                if(request.session().attribute(SESSION_NAME)!=null){
+                if (request.session().attribute(SESSION_NAME) != null) {
                     user = UsuarioServices.getInstancia().find(request.session().attribute(SESSION_NAME));
                 }
                 Template formTemplate = configuration.getTemplate("templates/crearPost.ftl");
@@ -609,12 +742,12 @@ public class Main {
                 map.put("username", user.getUsername());
                 map.put("login", "true");
                 map.put("tipoUser", user.getPrivilegio().name());
-                map.put("titulo",post.getTitulo());
-                map.put("descripcion",post.getDescripcion());
-                map.put("etiquetas",addEtiquetas(post));
-                map.put("url",post.getUrlimagen());
-                map.put("modificar","true");
-                map.put("id",post.getId());
+                map.put("titulo", post.getTitulo());
+                map.put("descripcion", post.getDescripcion());
+                map.put("etiquetas", addEtiquetas(post));
+                map.put("url", post.getUrlimagen());
+                map.put("modificar", "true");
+                map.put("id", post.getId());
                 formTemplate.process(map, writer);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -625,7 +758,7 @@ public class Main {
 
         });
 
-        Spark.post("/post/modificar/:id/guardando",(request,response)->{
+        Spark.post("/post/modificar/:id/guardando", (request, response) -> {
             long id = Long.parseLong(request.params("id"));
             String titulo = request.queryParams("titulo");
             String descripcion = request.queryParams("descripcion");
@@ -633,7 +766,7 @@ public class Main {
             post.setTitulo(titulo);
             post.setDescripcion(descripcion);
             PostService.getInstancia().editar(post);
-            response.redirect("/verpost/"+id+"/false");
+            response.redirect("/verpost/" + id + "/false");
             return null;
         });
     }
@@ -689,34 +822,35 @@ public class Main {
         }
     }
 
-    private static double convertir(long sizeB){
-        double cant =0;
-        return cant=sizeB*0.000001;
+    private static double convertir(long sizeB) {
+        double cant = 0;
+        return cant = sizeB * 0.000001;
     }
-    private static int cantViewByUser(List<Post> listPost){
-        int cant=0;
-        for (Post post: listPost){
-            cant+= post.getViews();
+
+    private static int cantViewByUser(List<Post> listPost) {
+        int cant = 0;
+        for (Post post : listPost) {
+            cant += post.getViews();
         }
         return cant;
     }
 
-    private static int cantAccesadaByUser(List<Post> listPost){
-        int cant=0;
-        for (Post post: listPost){
-            cant+= post.getAccesada();
+    private static int cantAccesadaByUser(List<Post> listPost) {
+        int cant = 0;
+        for (Post post : listPost) {
+            cant += post.getAccesada();
         }
         return cant;
     }
 
-    private static String addEtiquetas(Post post){
+    private static String addEtiquetas(Post post) {
         String etiquetas = "";
-        int i=0;
-        for (Etiqueta eti :post.getListaEtiqueta()) {
-            if(i==0){
-                etiquetas=eti.getName();
-            }else{
-                etiquetas+=", "+eti.getName();
+        int i = 0;
+        for (Etiqueta eti : post.getListaEtiqueta()) {
+            if (i == 0) {
+                etiquetas = eti.getName();
+            } else {
+                etiquetas += ", " + eti.getName();
             }
             i++;
         }
