@@ -2,271 +2,95 @@
 <@m.menu />
 
 <style>
-
     * {
-        margin: 0;
-        padding: 0;
+        box-sizing: border-box;
     }
 
-
-
-    .chat-box {
-        background: linear-gradient(0deg, #1E2C3D 00%, #3E364E 100%);
-        margin: 100px auto;
-        max-width: 500px;
-        height: 650px;
-        box-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
-        /*border : 1px solid #000;*/
-        overflow: hidden;
-        position: relative;
-        transition: all 0.3s cubic-bezier(0.25, 0.5, 0.5, 0.9);
+    html {
+        overflow-y: scroll;
     }
 
-    .chat-container {
-        position: absolute;
-        padding: 20px;
-        width: 500px;
-        height: 500px;
-        overflow: scroll;
-        transform: translateX(100%);
-        opacity: 0;
-        transition: all 0.3s cubic-bezier(0.25, 0.5, 0.5, 0.9);
+    body {
+        font-family: monospace;
+        font-size: 14px;
+        max-width: 480px;
+        margin: 0 auto;
+        padding: 20px
     }
 
-    .chat-container.active {
-        transform: translateX(0);
-        transition: all 0.3s cubic-bezier(0.25, 0.5, 0.5, 0.9);
-        opacity: 1;
-    }
-
-    .chat-container.hidechat {
-        transform: translateX(-10%);
-        transition: all 0.3s cubic-bezier(0.25, 0.5, 0.5, 0.9);
-        opacity: 0;
-    }
-
-    p {
-        margin: 0;
-    }
-
-    .bubble {
-        float: left;
-        width: auto;
-        max-width: 80%;
-        position: relative;
-        clear: both;
-        background: #95c2fd;
-        padding: 0.5em 1em;
-        background: linear-gradient(40deg, rgba(255, 255, 255, 0.2) 00%, rgba(255, 255, 255, 0.3) 100%);
-        border-radius: 3px;
-        box-shadow: 0 5px 30px rgba(255, 255, 255, 0.1);
-        margin-bottom: 10px;
-        color: rgba(255, 255, 255, 0.7);
-        word-wrap: break-word;
-        font-size: 1em;
-        margin-top: 30px;
-        opacity: 0;
-    }
-
-    .bubble:after {
-        border-radius: 20px / 5px;
-        content: '';
-        display: block;
-        position: absolute;
-        border: 8px solid transparent;
-        border-bottom-color: rgba(255, 255, 255, 0.2);
-        bottom: 1px;
-        transform: rotateZ(-90deg);
-        left: -15px;
-    }
-
-    .bubble-alt {
-        float: right;
-    }
-
-    .bubble-alt:after {
-        left: auto;
-        border-bottom-color: rgba(255, 255, 255, 0.3);
-        transform: rotateZ(90deg);
-        right: -16px;
-    }
-
-    .datestamp {
-        display: block;
-        text-align: center;
-        margin-bottom: 30px;
-        color: #8b91a0;
-        float: left;
-        opacity: 0;
-    }
-
-    .dt-alt {
-        float: right;
-    }
-
-    .chat-control {
-        padding: 1.2em;
-        margin-top: 495px;
-    }
-
-    .chat-input {
+    input {
         width: 100%;
-        border: none;
-        background: rgba(0, 0, 0, 0.3);
-        color: rgba(255, 255, 255, 0.3);
-        padding: 0.7em;
+        padding: 5px;
+        margin: 5px 0;
     }
 
-    .chat-input:focus {
-        border: none;
+    button {
+        float: right;
     }
 
-    .chat-header {
-        background: #fff;
-        padding: 0.5em;
-        padding-bottom: .7em;
-        text-align: center;
+    li {
+        margin: 5px 0;
     }
 
-    .chat-header span {
-        font-size: 12px;
+    #chatControls {
+        overflow: auto;
+        margin: 0 0 5px 0
+    }
+
+    #userlist {
+        position: fixed;
+        left: 50%;
+        list-style: none;
+        margin-left: 250px;
+        background: #f0f0f9;
+        padding: 5px 10px;
+        width: 150px;
+        top: 11px;
+    }
+
+    #chat p {
+        margin: 5px 0;
+        font-weight: 300
+    }
+
+    #chat .timestamp {
         position: absolute;
-        margin: 47px -50px;
-        font-style: italic;
+        top: 10px;
+        right: 10px;
+        font-size: 12px;
     }
 
-    .user-profile {
-        width: 50px;
-        height: 50px;
-        display: inline-block;
-        border-radius: 100%;
-        background: #DFDFEF;
-        margin: 0 10px;
-        background-size: cover;
-        -webkit-filter: grayscale(100%);
-        filter: grayscale(100%);
-        cursor: pointer
+    #chat article {
+        background: #f1f1f1;
+        padding: 10px;
+        margin: 10px 0;
+        border-left: 5px solid #aaa;
+        position: relative;
+        word-wrap: break-word;
     }
 
-    .user-profile:nth-child(1) {
-        background-image: url(http://vignette3.wikia.nocookie.net/fairytail/images/0/02/Mugshot_of_Erza.png/revision/latest?cb=20130509171537);
+    #chat article:first-of-type {
+        background: #c9edc3;
+        border-left-color: #74a377;
+        animation: enter .2s 1;
     }
 
-    .user-profile:nth-child(3) {
-        background-image: url(http://orig15.deviantart.net/8172/f/2016/079/7/2/natsu_xabused_reader_fire_within_the_heart_p1_by_minnibellsnow-d9vv2cy.jpg);
-    }
-
-    .user-profile:nth-child(5) {
-        background-image: url(http://vignette3.wikia.nocookie.net/fairytail/images/e/e7/Lucy_prof_2.jpg/revision/latest?cb=20111024225521);
-    }
-
-    .user-profile:nth-child(7) {
-        background-image: url(https://i.ytimg.com/vi/sROSCGZq1rA/hqdefault.jpg);
-    }
-
-    .user-profile.active {
-        -webkit-filter: grayscale(0%);
-        filter: grayscale(0%);
+    @keyframes enter {
+        from { transform: none;        }
+        50%  { transform: scale(1.05); }
+        to   { transform: none;        }
     }
 </style>
 
 <div class="container">
 
-    <div class="chat-box">
-        <div class="chat-header">
-            <h2>NOMBRE DEL USUARIO</h2>
-        </div>
-        <div id='chat' class="chat">
-
-            <div class="chat-container active" id='cont1'>
-
-                <div id="contenido_chat"></div>
-
-            </div>
-
-
-        </div>
-        <div class="chat-control">
-            <input class="chat-input" type="text" placeholder="Entre su mensaje" />
-        </div>
+    <div id="chatControls">
+        <input id="message" placeholder="Type your message">
+        <button id="send">Send</button>
     </div>
+    <ul id="userlist"> <!-- Built by JS --> </ul>
+    <div id="chat">    <!-- Built by JS --> </div>
+    <script src="websocketDemo.js"></script>
 
 </div>
 
-<script>
-    function tick() {
-        var city_id = $(".feed-selected-city").attr('id');
-        $("#contenido_chat").html("<div class='feed-loading'>The feed is loading ...</div>");
-        var ajaxOpts = {
-            type: "get",
-            url: "/men_show/${emisor}/${receptor}",
-            dataType: 'html',
-            data: "&city=" + city_id,
-            success: function(data) {
-                $('#contenido_chat').html(data.data);
-            }
-        };
-        $.ajax(ajaxOpts);
-        setTimeout('tick()',10000);
-    }
-
-    $(document).ready(function() {
-        tick();
-    });
-</script>
-
-<script>
-
-    $(document).ready(function(){
-        $('.user-profile').click(function() {
-            if(!$(this).hasClass('active')){
-
-                $('.user-profile.active').removeClass('active');
-                $(this).addClass('active');
-
-                var temp =   $('#'+$(this).attr('data-up'));
-
-                hideUI('.chat-container')
-                showUI('#'+$(this).attr('data-up'));
-                temp.addClass('active').removeClass('hidechat');
-                temp.prevAll('.chat-container').addClass('hidechat').removeClass('active');
-                temp.nextAll('.chat-container').removeClass('active').removeClass('hidechat');
-            }
-        });
-        showUI('#cont1');
-    });
-
-    function showUI(ele){
-        console.log($(ele));
-        var kids = $(ele).children(), temp;
-        for( var i = kids.length-1 ; i >=0  ; i-- ){
-            temp  = $(kids[i]);
-
-            if(temp.is('div')){
-                temp.animate({
-                    marginTop:0,
-                },400).css({opacity:1}).fadeIn()
-            }
-            else{
-                temp.css({opacity:1}).fadeIn()
-            }
-        }
-    }
-
-    function hideUI(ele){
-        console.log($(ele));
-        var kids = $(ele).children(), temp;
-        for( var i = kids.length-1 ; i >=0  ; i-- ){
-            temp  = $(kids[i]);
-
-            if(temp.is('div')){
-                temp.animate({
-                    marginTop:'30px',
-                }).css({opacity:0});
-            }
-            else{
-                temp.css({opacity:0});
-            }
-        }
-    }
-</script>

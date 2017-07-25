@@ -141,7 +141,6 @@ public class Main {
                 Set<Etiqueta> listEtiqueta = new HashSet<>();
                 if(etiquetas.length()!=0){
                     String etiqueta[] = etiquetas.split(",");
-                    System.out.println("wea asjjas");
                     for (int i = 0; i < etiqueta.length; i++) {
                         Etiqueta et = EtiquetaServices.getInstancia().findEtiquetaByName(etiqueta[i]);
                         if (et == null) {
@@ -156,14 +155,14 @@ public class Main {
                         EtiquetaServices.getInstancia().crearEntidad(et);
                     }
                 }
-                String fName = request.raw().getPart("img").getSubmittedFileName();
+                Calendar fecha = Calendar.getInstance();
+                int mes= fecha.get(Calendar.MONTH);
+                int dia= fecha.get(Calendar.DAY_OF_MONTH);
+                int ano= fecha.get(Calendar.YEAR);
+                int seg = fecha.get(Calendar.SECOND);
+                String fName = "post"+user.getName()+mes+dia+ano+seg+(int)Math.random()+".jpg";
                 double fsize = convertir(request.raw().getPart("img").getSize());
-                System.out.println("-----------------------------------");
-                System.out.println("Title: " + request.raw().getParameter("title"));
-                System.out.println("File: " + fName);
-
                 Part uploadedFile = request.raw().getPart("img");
-
                 File theDir = new File("src/main/resources/publico/yucaImagenes/");
 
 // if the directory does not exist, create it
@@ -190,21 +189,17 @@ public class Main {
                 multipartConfigElement = null;
                 parts = null;
                 uploadedFile = null;
-
-
-                //----------------------------------------------------------
-                Date date = new Date();
-                SimpleDateFormat format = new SimpleDateFormat("dd MMM yyyy");
-
-                Post post = new Post(titulo, descripcion, "/yucaImagenes/" +fName, fsize, user, format.format(date), listEtiqueta);
-                String uuid = UUID.randomUUID().toString();
-                post.setHash(uuid);
-                PostService.getInstancia().crearEntidad(post);
-                veriMenj ="ok";
-                mensj="La operaci&oacuten se realizo con existo..!!";
-                link=uuid;
-                response.redirect("/");
-
+                    //----------------------------------------------------------
+                    Date date = new Date();
+                    SimpleDateFormat format = new SimpleDateFormat("dd MMM yyyy");
+                    Post post = new Post(titulo, descripcion, "/yucaImagenes/" + fName, fsize, user, format.format(date), listEtiqueta);
+                    String uuid = UUID.randomUUID().toString();
+                    post.setHash(uuid);
+                    PostService.getInstancia().crearEntidad(post);
+                    veriMenj = "ok";
+                    mensj = "La operaci&oacuten se realizo con existo..!!";
+                    link = uuid;
+                    response.redirect("/");
             } catch (Exception e) {
                 e.printStackTrace();
                 veriMenj= "error";
@@ -785,4 +780,5 @@ public class Main {
         }
         return etiquetas;
     }
+
 }

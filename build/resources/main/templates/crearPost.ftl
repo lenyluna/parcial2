@@ -15,9 +15,8 @@
 
                     <div class="form-group">
                         <label for="exampleInputEmail1">Titulo</label>
-                        <input  type="text" name="titulo"  class="form-control" id="exampleInputEmail1" required/>
+                        <input  type="text" name="titulo"  class="form-control" id="exampleInputEmail1" required />
                     </div>
-
                     <div id="gallery"></div>
 
                     <div class="form-group">
@@ -51,7 +50,6 @@
                         <label for="exampleInputEmail1">Titulo</label>
                         <input  type="text" name="titulo"  class="form-control" id="exampleInputEmail1" value="${titulo}" required/>
                     </div>
-
                     <div class="form-group">
                         <label for="exampleInputEmail1">Descripci&oacuten</label>
 

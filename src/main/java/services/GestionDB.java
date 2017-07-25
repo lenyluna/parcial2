@@ -148,7 +148,6 @@ public class GestionDB<T> {
         EntityManager em = getEntityManager();
         String qkin = "select e from Mensaje e where e.emisor = :emisor and e.userDestino = :receptor or e.emisor = :receptor and e.userDestino = :emisor ";
         Query query = em.createQuery(qkin);
-      //select * from MENSAJE where emisor='zomgod' and userdestino='lenyluna' or  emisor='lenyluna' and userdestino='zomgod'
         query.setParameter("emisor", "'"+emisor+"'");
         query.setParameter("receptor", "'"+receptor+"'");
         System.out.println("la JODIDA QUERY DEL CARAJO: " + query.getFirstResult());
@@ -172,5 +171,13 @@ public class GestionDB<T> {
         Query query = em.createQuery("select e from Post e where e.user.id like :id");
         query.setParameter("id", id);
         return query.getResultList();
+    }
+
+    public Post findPostBytitulo(String titulo){
+        EntityManager em = getEntityManager();
+        Query query = em.createQuery("select e from Post e where e.titulo like :titulo");
+        query.setParameter("titulo", "%"+titulo+"%");
+        return (Post) query.getSingleResult();
+
     }
 }
