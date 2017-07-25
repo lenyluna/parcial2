@@ -18,4 +18,11 @@ dependencies {
     compile group: 'org.sql2o', name: 'sql2o', version: '1.5.4'
     compile group: 'com.h2database', name: 'h2', version: '1.4.194'
     compile 'org.hibernate:hibernate-core:5.2.0.Final'
+
+    // https://mvnrepository.com/artifact/com.j2html/j2html
+    compile group: 'com.j2html', name: 'j2html', version: '1.0.0'
+
+    // https://mvnrepository.com/artifact/org.json/json
+    compile group: 'org.json', name: 'json', version: '20160810'
+
 }

@@ -4,9 +4,11 @@
 <div class="container">
 
         <div class="col-md-8 col-md-offset-2 well">
-
             <div class="row">
-                <h3>${post.titulo}</h3>
+                <#if login =="true">
+                <p align="right"><#if username == post.user.username || tipoUser == "AdministradorGeneral"><a href="/post/modificar/${post.id}"><span class="glyphicon glyphicon-edit"></span> Modificar</a> </#if> <#if tipoUser == "AdministradorGeneral"><a href=""><span class="glyphicon glyphicon-remove"></span> Eliminar </a> </#if></p>
+                </#if>
+                    <h3>${post.titulo}</h3>
                 <br>
                 <h4>by <a class="button"  <#if login=="true"> href="/mensaje/${username}/${post.user.username}" </#if> style="text-decoration:none">${post.user.username}</a> <span class="glyphicon glyphicon-time"></span> <a class="button" style="text-decoration:none">${post.fecha}</a></h4>
                 <div style="width: 250px;">
@@ -21,6 +23,10 @@
                 <img class="img-responsive" alt="Responsive image" src="${post.urlimagen}" style="width: 1024px; height: 700px"/>
             </div>
             <hr>
+            <div class="row">
+                <p style="padding-left: 8px;"><b>Descripci&oacuten:</b> <br/> ${post.descripcion}</p>
+            </div>
+            <hr/>
             <div class="row">
                 <div class="col-md-6">
                     <div class="row">
@@ -38,7 +44,7 @@
                 </div>
                 <div class="col-md-6">
                     <#list post.listaEtiqueta as etiqueta>
-                    <a href="#"><span class="badge">${etiqueta.name}</span></a>
+                    <a href="/postByEtiqueta/${etiqueta.id}/"><span class="badge">${etiqueta.name}</span></a>
                     </#list>
                 </div>
             </div>
