@@ -6,7 +6,9 @@
 <div class="alert alert-danger" align="center">Ha ocurrido un error realizando la operaci&oacute..! <a href="/msjRemove/inicio/-1"><span class="glyphicon glyphicon-remove"></span> </a></div>
 </#if>
 <div class="container">
-
+ <#if pageActual == "0">
+     <#assign page="0"/>
+ </#if>
     <div class="col-md-12 well">
         <div class="row">
         <#list listPost as post>
@@ -20,9 +22,8 @@
                </a>
         </#list>
         </div>
-
     </div>
-
+<a href="/">Siguiente.>> <#assign page+="1"/></a>
 </div><!-- /.container -->
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>

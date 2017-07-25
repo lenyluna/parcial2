@@ -53,7 +53,6 @@ public class Main {
 
 
         Spark.get("/", (request, response) -> {
-            System.out.println("tam;o"+file.length);
             checkCOOKIES(request);
             StringWriter writer = new StringWriter();
             try {
@@ -76,7 +75,7 @@ public class Main {
                 }else {
                     map.put("creado","false");
                 }
-                map.put("listPost", PostService.getInstancia().findAll());
+                map.put("listPost", PostService.getInstancia().findALLPost(0));
                 formTemplate.process(map, writer);
             } catch (Exception e) {
                 System.out.println(e.toString());
