@@ -16,6 +16,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.file.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -218,7 +220,7 @@ public class Main {
                 String password = request.queryParams("password") != null ? request.queryParams("password") : "unknown";
                 String nombre = request.queryParams("name") != null ? request.queryParams("name") : "unknown";
                 String correo = request.queryParams("email") != null ? request.queryParams("email") : "unknown";
-                UsuarioServices.getInstancia().crearEntidad(new Usuario(nombre, username, password, correo, Typeline.Normal));
+                UsuarioServices.getInstancia().crearEntidad(new Usuario(nombre, username, password, correo, Typeline.Normal,""));
                 response.cookie(COOKIE_NAME, username, 3600);
                 List<Usuario> allUser = UsuarioServices.getInstancia().findAll();
                 request.session().attribute(SESSION_NAME, allUser.get(allUser.size() - 1).getId());
