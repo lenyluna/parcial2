@@ -1,6 +1,10 @@
 <#import "common/menu.ftl" as m>
 <@m.menu />
-
+<#if veri=="ok">
+<div class="alert alert-success" align="center"> ${mensaje}  <#if creado=="true"><a href="/post/${link}">Haz clic</a> para ir al Post </#if> <a href="/msjRemove/inicio/-1"><span class="glyphicon glyphicon-remove"></span> </a></div>
+<#elseif veri=="error">
+<div class="alert alert-danger">Ha ocurrido un error realizando la operaci&oacute..!</div>
+</#if>
 <div class="container">
 
     <div class="col-md-12 well">

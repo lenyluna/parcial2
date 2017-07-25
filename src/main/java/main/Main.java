@@ -32,6 +32,9 @@ import static spark.Spark.staticFileLocation;
 public class Main {
     private static final String COOKIE_NAME = "user_cookies";
     private static String SESSION_NAME = "id";
+    private static String veriMenj= "";
+    private static String mensj="";
+    private static String link="";
 
     public static void main(String[] args) {
         ConfigDB.getInstancia().startDb();
@@ -63,6 +66,14 @@ public class Main {
                     map.put("tipoUser", user.getPrivilegio().name());
                 } else {
                     map.put("login", "false");
+                }
+                map.put("mensaje",mensj);
+                map.put("veri",veriMenj);
+                map.put("link",link);
+                if(link!=""){
+                    map.put("creado","true");
+                }else {
+                    map.put("creado","false");
                 }
                 map.put("listPost", PostService.getInstancia().findAll());
                 formTemplate.process(map, writer);
@@ -189,10 +200,14 @@ public class Main {
                 String uuid = UUID.randomUUID().toString();
                 post.setHash(uuid);
                 PostService.getInstancia().crearEntidad(post);
+                veriMenj ="ok";
+                mensj="La operaci&oacuten se realizo con existo..!!";
+                link=uuid;
                 response.redirect("/");
 
             } catch (Exception e) {
                 e.printStackTrace();
+                veriMenj= "error";
                 response.redirect("/");
             }
 
@@ -251,6 +266,14 @@ public class Main {
                     }
                 } else {
                     map.put("login", "false");
+                }
+                map.put("mensaje",mensj);
+                map.put("veri",veriMenj);
+                map.put("link2",link);
+                if(link!=""){
+                    map.put("creado","true");
+                }else {
+                    map.put("creado","false");
                 }
                 formTemplate.process(map, writer);
             } catch (Exception e) {
@@ -396,6 +419,10 @@ public class Main {
                 } else {
                     map.put("login", "false");
                 }
+                map.put("mensaje",mensj);
+                map.put("veri",veriMenj);
+                map.put("link2",link);
+                map.put("creado","false");
                 formTemplate.process(map, writer);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -531,9 +558,10 @@ public class Main {
             return null;
         });
 
-        Spark.get("/eliminar/:id", (request, response) -> {
+        Spark.get("/eliminar/post/:id", (request, response) -> {
             long id = Long.parseLong(request.params("id"));
             Post post = PostService.getInstancia().find(id);
+            String backup= post.getTitulo();
             deleteComen(post);
             ArrayList<Etiqueta> arrayList = new ArrayList<>();
             for (Etiqueta et : post.getListaEtiqueta()) {
@@ -543,6 +571,8 @@ public class Main {
             post.getListaComentario().removeAll(post.getListaComentario());
             PostService.getInstancia().eliminar(id);
             veryDeleteEtique(arrayList);
+            veriMenj="ok";
+            mensj="El Post titulado: "+backup+" se elimin&oacute correctamente";
             response.redirect("/");
             return null;
         });
@@ -550,9 +580,18 @@ public class Main {
         Spark.get("/eliminar/:idPost/comentario/:id", (request, response) -> {
             long id = Long.parseLong(request.params("id"));
             long idPost = Long.parseLong(request.params("idPost"));
-            Comentario com = ComentarioService.getInstancia().find(id);
-            ComentarioService.getInstancia().eliminar(id);
-            response.redirect("/verpost/" + idPost+"/false");
+            try{
+                Comentario com = ComentarioService.getInstancia().find(id);
+                ComentarioService.getInstancia().eliminar(id);
+                veriMenj="ok";
+                mensj="El Comentario de: "+com.getAutor().getUsername()+"se elimin&oacute correctamente";
+                response.redirect("/verpost/" + idPost+"/false");
+            }catch (Exception e) {
+                veriMenj="error";
+                response.redirect("/");
+                e.printStackTrace();
+            }
+
             return null;
         });
 
@@ -621,19 +660,43 @@ public class Main {
                 response.redirect("/");
             }
             return writer;
-
-
         });
 
         Spark.post("/post/modificar/:id/guardando",(request,response)->{
             long id = Long.parseLong(request.params("id"));
             String titulo = request.queryParams("titulo");
             String descripcion = request.queryParams("descripcion");
-            Post post = PostService.getInstancia().find(id);
-            post.setTitulo(titulo);
-            post.setDescripcion(descripcion);
-            PostService.getInstancia().editar(post);
-            response.redirect("/verpost/"+id+"/false");
+            try {
+                Post post = PostService.getInstancia().find(id);
+                post.setTitulo(titulo);
+                post.setDescripcion(descripcion);
+                PostService.getInstancia().editar(post);
+                veriMenj="ok";
+                mensj="El Post se ha modificado correctamente";
+                response.redirect("/verpost/" + id + "/false");
+            } catch (Exception e) {
+                e.printStackTrace();
+                veriMenj="error";
+                response.redirect("/");
+            }
+            return null;
+        });
+
+        Spark.get("/msjRemove/:where/:idPost",(request, response) -> {
+            String where = request.params("where");
+            long id = Long.parseLong(request.params("idPost"));
+            veriMenj="";
+            link="";
+            mensj="";
+            switch (where){
+                case "inicio":
+                    response.redirect("/");
+                    break;
+                case "verpost":
+                    response.redirect("/verpost/"+id+"/false");
+                    break;
+            }
+
             return null;
         });
     }

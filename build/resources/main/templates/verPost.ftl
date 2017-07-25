@@ -1,12 +1,16 @@
 <#import "common/menu.ftl" as m>
 <@m.menu />
-
+<#if veri=="ok">
+<div class="alert alert-success" align="center"> ${mensaje}  <#if creado=="true"><a href="/post/${link2}">Haz clic</a> para ir al Post </#if> <a href="/msjRemove/verpost/${post.id}"><span class="glyphicon glyphicon-remove"></span> </a></div>
+<#elseif mensaje=="error">
+<div class="alert alert-danger">Ha ocurrido un error realizando la operaci&oacute..!</div>
+</#if>
 <div class="container">
 
         <div class="col-md-8 col-md-offset-2 well">
             <div class="row">
                 <#if login =="true">
-                <p align="right"><#if username == post.user.username || tipoUser == "AdministradorGeneral"><a href="/post/modificar/${post.id}"><span class="glyphicon glyphicon-edit"></span> Modificar</a> </#if> <#if tipoUser == "AdministradorGeneral"><a href=""><span class="glyphicon glyphicon-remove"></span> Eliminar </a> </#if></p>
+                <p align="right"><#if username == post.user.username || tipoUser == "AdministradorGeneral"><a href="/post/modificar/${post.id}"><span class="glyphicon glyphicon-edit"></span> Modificar</a> </#if> <#if tipoUser == "AdministradorGeneral"><a href="/eliminar/post/${post.id}"><span class="glyphicon glyphicon-remove"></span> Eliminar </a> </#if></p>
                 </#if>
                     <h3>${post.titulo}</h3>
                 <br>
