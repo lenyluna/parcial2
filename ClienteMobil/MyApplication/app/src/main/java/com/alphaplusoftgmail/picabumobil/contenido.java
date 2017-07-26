@@ -3,6 +3,7 @@ package com.alphaplusoftgmail.picabumobil;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +14,7 @@ import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,6 +47,8 @@ public class contenido extends AppCompatActivity {
     ArrayAdapter<Post> adapter;
     private static ImageLoader imageLoader = AppController.getInstance().getImageLoader();
 
+    static Button anadir;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,8 +70,19 @@ public class contenido extends AppCompatActivity {
                 new ColorDrawable(Color.parseColor("#1b1b1b")));*/
 
         // Creating volley request obj
+        anadir = (Button) this.findViewById(R.id.add);
+
+        anadir.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
 
 
+                Intent Tab_activity = new Intent(getBaseContext(), crear.class);
+                // Tab_activity.putExtra("user", user); //Optional parameters
+                startActivity(Tab_activity);
+
+            }
+        });
     }
 
     class postArrayAdapter extends ArrayAdapter<Post>{

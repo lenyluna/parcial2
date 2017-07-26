@@ -22,7 +22,7 @@
         android:id="@+id/gift"
         android:layout_below="@+id/titulo"
         android:layout_width="fill_parent"
-        android:layout_height="400dp"
+        android:layout_height="600dp"
         android:background="@drawable/boogif"
         android:paddingTop="10dp"
         />

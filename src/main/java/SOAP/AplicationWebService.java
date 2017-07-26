@@ -21,4 +21,11 @@ public class AplicationWebService {
 
         return  PostService.getInstancia().findPostsByUsername(username);
     }
+
+    @WebMethod
+    public String crear_post(String titulo, String descripcion, String etiquetas, String urlimagen){
+
+
+        return "ok created";
+    }
 }
