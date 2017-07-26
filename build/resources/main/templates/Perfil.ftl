@@ -3,8 +3,8 @@
 
 <div class="container">
     <div class="col-md-8 col-md-offset-2 well">
-           <p><h3><i>${user.name} </i><small>${user.username}</small><small>${user.pais}</small></h3></p>
-            <hr style="color: #0056b2;"/>
+           <p><h3><i>${user.name} </i><small>${user.username}</small><small> <span class=" glyphicon glyphicon-map-marker"></span> ${user.pais}</small></h3></p>
+        <hr style="color: #0056b2;"/>
         <div class="row">
             <div class="col-xs-12 col-sm-4 emphasis">
             <h2><strong>${cantArticulo}</strong></h2>
