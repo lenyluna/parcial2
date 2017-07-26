@@ -23,8 +23,8 @@ public class UsuarioServices extends GestionDB<Usuario> {
     }
     public void cargarDemo(){
 
-        Usuario user = new Usuario("Leny","lenyluna","admin","leny0023@hotmail.com",Typeline.AdministradorGeneral,"DO");
-        Usuario user1 =new Usuario("Starling","zomgod","root","starling.j@hotmail.com",Typeline.AdministradorGeneral,"DO");
+        Usuario user = new Usuario("Leny","lenyluna","admin","leny0023@hotmail.com",Typeline.AdministradorGeneral,"Dominican Republic (DO)");
+        Usuario user1 =new Usuario("Starling","zomgod","root","starling.j@hotmail.com",Typeline.AdministradorGeneral,"Dominican Republic (DO)");
         Usuario user2 = new Usuario("Anonimo","anonimo","","",Typeline.Anonimo,"");
         crearEntidad(user1);
         crearEntidad(user);

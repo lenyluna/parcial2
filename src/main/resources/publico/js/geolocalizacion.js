@@ -17,5 +17,5 @@ function showPosition(position) {
     }
 }
 function verCiudad(jsonObj) {
-   siglas.value=jsonObj['countryCode'];
+   siglas.value=jsonObj['countryName']+' ('+jsonObj['countryCode']+')';
 }
