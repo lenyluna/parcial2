@@ -125,16 +125,11 @@ public class Main {
                     return writer;
                 }, jsonTransformer);
                 post("/new", "multipart/form-data", (request, response) -> {
+                    System.out.println("lenyluna");
                     StringWriter writer = new StringWriter();
-                    Usuario user = null;
                     try {
-                        if (request.session().attribute(SESSION_NAME) != null) {
-                            user = UsuarioServices.getInstancia().find(request.session().attribute(SESSION_NAME));
-                        } else {
-                            user = UsuarioServices.getInstancia().findAllByUser("anonimo");
-                            response.cookie(COOKIE_NAME, user.getUsername(), 3600);
-                            request.session().attribute(SESSION_NAME, user.getId());
-                        }
+                        Usuario user = UsuarioServices.getInstancia().findAllByUser("anonimo");
+
                         String location = "image";          // the directory location where files will be stored
                         long maxFileSize = 100000000;       // the maximum size allowed for uploaded files
                         long maxRequestSize = 100000000;    // the maximum size allowed for multipart/form-data requests
@@ -211,7 +206,8 @@ public class Main {
                         String uuid = UUID.randomUUID().toString();
                         post.setHash(uuid);
                         PostService.getInstancia().crearEntidad(post);
-                        response.redirect("OK");
+                       // response.redirect("OK");
+                        response.redirect("/");
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -225,6 +221,20 @@ public class Main {
 
             });
 
+        });
+
+        Spark.get("/apiCliente/rest",(request, response)->{
+            StringWriter writer = new StringWriter();
+            try{
+                Template formTemplate = configuration.getTemplate("templates/crearAPI.ftl");
+                Map<String, Object> map = new HashMap<>();
+                map.put("login", "false");
+                formTemplate.process(map, writer);
+            } catch(Exception e){
+                e.printStackTrace();
+                response.redirect("/");
+            }
+            return writer;
         });
 
         Spark.get("/CrearPost/", (request, response) -> {
