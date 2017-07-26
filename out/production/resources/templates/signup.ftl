@@ -40,7 +40,7 @@
                         <label for="lastname" class="col-md-3 control-label">Ubicaci&oacuten</label>
                         <button type="button" onclick="myUbicacion()"> Ubicaci&oacuten</button>
                         <p id="ubicacion"></p>
-                        <input type="text" name="pais" id="pais" style="padding-right: 20px"/>
+                        <input type="text" class="form-control" name="pais" id="pais" style="padding-right: 20px"/>
                     </div>
 
                     <div style="margin-top:10px" class="form-group">
