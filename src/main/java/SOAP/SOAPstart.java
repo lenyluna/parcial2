@@ -28,7 +28,7 @@ public class SOAPstart {
         AplicationWebService wsa = new AplicationWebService();
         Endpoint endpoint = Endpoint.create(wsa);
         endpoint.publish(context);
-        // Para acceder al wsdl en http://localhost:7777/ws/AcademicoWebService?wsdl
+        // Para acceder al wsdl en http://localhost:7777/ws/AplicationWebService?wsdl
 
     }
 

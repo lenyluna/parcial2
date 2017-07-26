@@ -4,6 +4,8 @@
     <bytecodeTargetLevel>
       <module name="parcial2_main" target="1.8" />
       <module name="parcial2_test" target="1.8" />
+      <module name="soap_client_main" target="1.8" />
+      <module name="soap_client_test" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

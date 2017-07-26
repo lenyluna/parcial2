@@ -1,2 +1,3 @@
 rootProject.name = 'parcial2'
+include 'soap_client'
 

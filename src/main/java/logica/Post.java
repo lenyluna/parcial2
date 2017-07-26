@@ -39,6 +39,14 @@ public class Post implements Serializable {
         this.accesada = 0;
     }
 
+    public Post(String titulo, String descripcion, String urlimagen, String hash, Usuario user) {
+        this.titulo = titulo;
+        this.descripcion = descripcion;
+        this.urlimagen = urlimagen;
+        this.hash = hash;
+        this.user=user;
+    }
+
     public Post(){
 
     }

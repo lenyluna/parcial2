@@ -42,9 +42,9 @@ import static spark.Spark.*;
 public class Main {
     private static final String COOKIE_NAME = "user_cookies";
     private static String SESSION_NAME = "id";
-    private static String veriMenj= "";
-    private static String mensj="";
-    private static String link="";
+    private static String veriMenj = "";
+    private static String mensj = "";
+    private static String link = "";
 
     public static recursos resource;
 
@@ -83,13 +83,13 @@ public class Main {
                 } else {
                     map.put("login", "false");
                 }
-                map.put("mensaje",mensj);
-                map.put("veri",veriMenj);
-                map.put("link",link);
-                if(link!=""){
-                    map.put("creado","true");
-                }else {
-                    map.put("creado","false");
+                map.put("mensaje", mensj);
+                map.put("veri", veriMenj);
+                map.put("link", link);
+                if (link != "") {
+                    map.put("creado", "true");
+                } else {
+                    map.put("creado", "false");
                 }
                 map.put("listPost", PostService.getInstancia().findALLPost(0));
                 formTemplate.process(map, writer);
@@ -297,11 +297,11 @@ public class Main {
                     }
                 }
                 Calendar fecha = Calendar.getInstance();
-                int mes= fecha.get(Calendar.MONTH);
-                int dia= fecha.get(Calendar.DAY_OF_MONTH);
-                int ano= fecha.get(Calendar.YEAR);
+                int mes = fecha.get(Calendar.MONTH);
+                int dia = fecha.get(Calendar.DAY_OF_MONTH);
+                int ano = fecha.get(Calendar.YEAR);
                 int seg = fecha.get(Calendar.SECOND);
-                String fName = "post"+user.getName()+mes+dia+ano+seg+(int)Math.random()+".jpg";
+                String fName = "post" + user.getName() + mes + dia + ano + seg + (int) Math.random() + ".jpg";
                 double fsize = convertir(request.raw().getPart("img").getSize());
                 Part uploadedFile = request.raw().getPart("img");
                 File theDir = new File("src/main/resources/publico/yucaImagenes/");
@@ -330,20 +330,20 @@ public class Main {
                 multipartConfigElement = null;
                 parts = null;
                 uploadedFile = null;
-                    //----------------------------------------------------------
-                    Date date = new Date();
-                    SimpleDateFormat format = new SimpleDateFormat("dd MMM yyyy");
-                    Post post = new Post(titulo, descripcion, "/yucaImagenes/" + fName, fsize, user, format.format(date), listEtiqueta);
-                    String uuid = UUID.randomUUID().toString();
-                    post.setHash(uuid);
-                    PostService.getInstancia().crearEntidad(post);
-                    veriMenj = "ok";
-                    mensj = "La operaci&oacuten se realizo con existo..!!";
-                    link = uuid;
-                    response.redirect("/");
+                //----------------------------------------------------------
+                Date date = new Date();
+                SimpleDateFormat format = new SimpleDateFormat("dd MMM yyyy");
+                Post post = new Post(titulo, descripcion, "/yucaImagenes/" + fName, fsize, user, format.format(date), listEtiqueta);
+                String uuid = UUID.randomUUID().toString();
+                post.setHash(uuid);
+                PostService.getInstancia().crearEntidad(post);
+                veriMenj = "ok";
+                mensj = "La operaci&oacuten se realizo con existo..!!";
+                link = uuid;
+                response.redirect("/");
             } catch (Exception e) {
                 e.printStackTrace();
-                veriMenj= "error";
+                veriMenj = "error";
                 response.redirect("/");
             }
 
@@ -360,10 +360,10 @@ public class Main {
                 String nombre = request.queryParams("name") != null ? request.queryParams("name") : "unknown";
                 String correo = request.queryParams("email") != null ? request.queryParams("email") : "unknown";
                 String pais = request.queryParams("pais");
-                if(pais==""){
-                    UsuarioServices.getInstancia().crearEntidad(new Usuario(nombre, username, password, correo, Typeline.Normal,""));
-                }else {
-                    UsuarioServices.getInstancia().crearEntidad(new Usuario(nombre, username, password, correo, Typeline.Normal,pais));
+                if (pais == "") {
+                    UsuarioServices.getInstancia().crearEntidad(new Usuario(nombre, username, password, correo, Typeline.Normal, ""));
+                } else {
+                    UsuarioServices.getInstancia().crearEntidad(new Usuario(nombre, username, password, correo, Typeline.Normal, pais));
                 }
 
                 response.cookie(COOKIE_NAME, username, 3600);
@@ -409,13 +409,13 @@ public class Main {
                 } else {
                     map.put("login", "false");
                 }
-                map.put("mensaje",mensj);
-                map.put("veri",veriMenj);
-                map.put("link2",link);
-                if(link!=""){
-                    map.put("creado","true");
-                }else {
-                    map.put("creado","false");
+                map.put("mensaje", mensj);
+                map.put("veri", veriMenj);
+                map.put("link2", link);
+                if (link != "") {
+                    map.put("creado", "true");
+                } else {
+                    map.put("creado", "false");
                 }
                 formTemplate.process(map, writer);
             } catch (Exception e) {
@@ -538,6 +538,24 @@ public class Main {
             return writer;
         });
 
+        Spark.get("/cliente_soap", (request, response) -> {
+            checkCOOKIES(request);
+            StringWriter writer = new StringWriter();
+            try {
+
+                Template formTemplate = configuration.getTemplate("templates/cliente_soap.ftl");
+                Map<String, Object> map = new HashMap<>();
+
+                formTemplate.process(map, writer);
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println("ERROR EN LA ENTRADA");
+            }
+
+            return writer;
+
+        });
+
         Spark.get("/post/:id", (request, response) -> {
             checkCOOKIES(request);
             StringWriter writer = new StringWriter();
@@ -561,10 +579,10 @@ public class Main {
                 } else {
                     map.put("login", "false");
                 }
-                map.put("mensaje",mensj);
-                map.put("veri",veriMenj);
-                map.put("link2",link);
-                map.put("creado","false");
+                map.put("mensaje", mensj);
+                map.put("veri", veriMenj);
+                map.put("link2", link);
+                map.put("creado", "false");
                 formTemplate.process(map, writer);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -703,7 +721,7 @@ public class Main {
         Spark.get("/eliminar/post/:id", (request, response) -> {
             long id = Long.parseLong(request.params("id"));
             Post post = PostService.getInstancia().find(id);
-            String backup= post.getTitulo();
+            String backup = post.getTitulo();
             deleteComen(post);
             ArrayList<Etiqueta> arrayList = new ArrayList<>();
             for (Etiqueta et : post.getListaEtiqueta()) {
@@ -713,8 +731,8 @@ public class Main {
             post.getListaComentario().removeAll(post.getListaComentario());
             PostService.getInstancia().eliminar(id);
             veryDeleteEtique(arrayList);
-            veriMenj="ok";
-            mensj="El Post titulado: "+backup+" se elimin&oacute correctamente";
+            veriMenj = "ok";
+            mensj = "El Post titulado: " + backup + " se elimin&oacute correctamente";
             response.redirect("/");
             return null;
         });
@@ -722,14 +740,14 @@ public class Main {
         Spark.get("/eliminar/:idPost/comentario/:id", (request, response) -> {
             long id = Long.parseLong(request.params("id"));
             long idPost = Long.parseLong(request.params("idPost"));
-            try{
+            try {
                 Comentario com = ComentarioService.getInstancia().find(id);
                 ComentarioService.getInstancia().eliminar(id);
-                veriMenj="ok";
-                mensj="El Comentario de: "+com.getAutor().getUsername()+"se elimin&oacute correctamente";
-                response.redirect("/verpost/" + idPost+"/false");
-            }catch (Exception e) {
-                veriMenj="error";
+                veriMenj = "ok";
+                mensj = "El Comentario de: " + com.getAutor().getUsername() + "se elimin&oacute correctamente";
+                response.redirect("/verpost/" + idPost + "/false");
+            } catch (Exception e) {
+                veriMenj = "error";
                 response.redirect("/");
                 e.printStackTrace();
             }
@@ -813,29 +831,29 @@ public class Main {
                 post.setTitulo(titulo);
                 post.setDescripcion(descripcion);
                 PostService.getInstancia().editar(post);
-                veriMenj="ok";
-                mensj="El Post se ha modificado correctamente";
+                veriMenj = "ok";
+                mensj = "El Post se ha modificado correctamente";
                 response.redirect("/verpost/" + id + "/false");
             } catch (Exception e) {
                 e.printStackTrace();
-                veriMenj="error";
+                veriMenj = "error";
                 response.redirect("/");
             }
             return null;
         });
 
-        Spark.get("/msjRemove/:where/:idPost",(request, response) -> {
+        Spark.get("/msjRemove/:where/:idPost", (request, response) -> {
             String where = request.params("where");
             long id = Long.parseLong(request.params("idPost"));
-            veriMenj="";
-            link="";
-            mensj="";
-            switch (where){
+            veriMenj = "";
+            link = "";
+            mensj = "";
+            switch (where) {
                 case "inicio":
                     response.redirect("/");
                     break;
                 case "verpost":
-                    response.redirect("/verpost/"+id+"/false");
+                    response.redirect("/verpost/" + id + "/false");
                     break;
             }
 
